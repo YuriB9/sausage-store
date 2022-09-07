@@ -44,9 +44,7 @@ pipeline {
 
         stage('Slack notification') {
             steps {
-                sh ''' curl -X POST -H 'Content-type: application/json' \ 
-                https://hooks.slack.com/services/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 \
-                --data '{"text":"Юрий Батков собрал приложение."}' '''
+                sh ''' curl -X POST -H 'Content-type: application/json' https://hooks.slack.com/services/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 --data '{"text":"Юрий Батков собрал приложение."}' '''
             }
         }
     }
