@@ -1,0 +1,26 @@
+
+build-backend-code-job:
+  stage: build
+  only:
+    changes:
+    - backend/*
+  script:
+    - cd backend
+    - mvn package
+  artifacts:
+    paths:
+      - backend/target/sausage-store-0.0.1-SNAPSHOT.jar
+
+slack-notification-backend:
+  stage: notify
+  only:
+    changes:
+    - backend/*
+    variables:
+    - $CI_COMMIT_MESSAGE =~ /send notification/
+  variables:
+    DATA: '{"text":"Юрий Батков собрал backend. \n <${CI_PROJECT_URL}/-/jobs/artifacts/${CI_COMMIT_REF_NAME}/download?job=build-backend-code-job|Backend Artifact>"}'
+  script:
+    - curl -X POST -H "${CONTENT_TYPE}" --data "${DATA}" "${SLACK_WEBHOOK}"
+  needs:
+    - build-backend-code-job
