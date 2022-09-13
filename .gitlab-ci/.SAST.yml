@@ -1,0 +1,38 @@
+
+# test comment
+spotbugs-sast:
+  rules:
+    - changes:
+      - backend/**/*
+  dependencies:
+    - build-backend
+  variables:
+    SAST_JAVA_VERSION: 11
+    MAVEN_REPO_PATH: $CI_PROJECT_DIR/.m2/repository
+    COMPILE: "false"
+  artifacts:
+    reports:
+      sast: gl-sast-report.json
+
+eslint-sast:
+  rules:
+    - changes:
+      - frontend/**/*
+  dependencies:
+    - build-frontend
+
+nodejs-scan-sast:
+  rules:
+    - changes:
+      - frontend/**/*
+  dependencies:
+    - build-frontend
+
+semgrep-sast:
+  rules:
+    - changes:
+      - frontend/**/*
+      - backend/**/*
+  dependencies:
+    - build-frontend
+    - build-backend
