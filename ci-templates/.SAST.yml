@@ -1,8 +1,4 @@
 
-workflow:
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-
 spotbugs-sast:
   dependencies:
     - build-backend-code-job
