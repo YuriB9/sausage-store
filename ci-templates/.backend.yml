@@ -6,9 +6,10 @@ build-backend-code-job:
     - backend/*
   script:
     - cd backend
-    - mvn package
+    - mvn package -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository
   artifacts:
     paths:
+      - ${CI_PROJECT_DIR}/.m2/
       - backend/target/sausage-store-0.0.1-SNAPSHOT.jar
 
 slack-notification-backend:
