@@ -1,10 +1,12 @@
 stages:
  - build
+ - test
  - notify
 
 variables:
   CONTENT_TYPE: "Content-type: application/json"
 
 include:
-   - '/ci-templates/.backend.yml'
-   - '/ci-templates/.frontend.yml'
+   - local: '/ci-templates/.backend.yml'
+   - local: '/ci-templates/.frontend.yml'
+   - template: Security/SAST.gitlab-ci.yml
