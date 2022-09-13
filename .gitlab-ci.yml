@@ -10,3 +10,4 @@ include:
    - local: '/ci-templates/.backend.yml'
    - local: '/ci-templates/.frontend.yml'
    - template: Security/SAST.gitlab-ci.yml
+   - local: '/ci-templates/.SAST.yml'

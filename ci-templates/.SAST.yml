@@ -1,0 +1,25 @@
+
+eslint-sast:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+nodejs-scan-sast:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+semgrep-sast:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+spotbugs-sast:
+  dependencies:
+    - build-backend-code-job
+  variables:
+    SAST_JAVA_VERSION: 11
+    MAVEN_REPO_PATH: $CI_PROJECT_DIR/.m2/repository
+    COMPILE: "false"
+  artifacts:
+    reports:
+      sast: gl-sast-report.json
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
