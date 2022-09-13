@@ -10,14 +10,4 @@ include:
    - local: '/ci-templates/.backend.yml'
    - local: '/ci-templates/.frontend.yml'
    - template: Security/SAST.gitlab-ci.yml
-
-spotbugs-sast:
-  dependencies:
-    - build-backend-code-job
-  variables:
-    SAST_JAVA_VERSION: 11
-    MAVEN_REPO_PATH: $CI_PROJECT_DIR/.m2/repository
-    COMPILE: "false"
-  artifacts:
-    reports:
-      sast: gl-sast-report.json
+   - local: '/ci-templates/.SAST.yml'
