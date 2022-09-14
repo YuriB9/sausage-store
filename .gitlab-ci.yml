@@ -32,6 +32,7 @@ sonarqube-backend-check:
     - >
       mvn verify sonar:sonar -Dsonar.qualitygate.wait=true
       -Dsonar.projectKey=09_YURIBATKOV_BACKEND
+      -Dsonar.projectName=09_YURIBATKOV_BACKEND
       -Dsonar.host.url=${SONAR_HOST_URL}
       -Dsonar.login=${SONAR_TOKEN_FRONT}
   allow_failure: true
@@ -55,6 +56,7 @@ sonarqube-frontend-check:
     - >
       sonar-scanner
       -Dsonar.projectKey=09_YURIBATKOV_FRONTEND
+      -Dsonar.projectName=09_YURIBATKOV_FRONTEND
       -Dsonar.host.url=${SONAR_HOST_URL}
       -Dsonar.login=${SONAR_TOKEN_BACK}
   allow_failure: true
