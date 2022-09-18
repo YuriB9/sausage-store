@@ -7,8 +7,7 @@ spotbugs-sast:
     MAVEN_REPO_PATH: $CI_PROJECT_DIR/.m2/repository
     COMPILE: "false"
   rules:
-    - if:
-      changes:
+    - changes:
       - backend/*
   artifacts:
     reports:
@@ -16,18 +15,15 @@ spotbugs-sast:
 
 eslint-sast:
   rules:
-    - if:
-      changes:
-      - backend/*
+    - changes:
+      - frontend/*
 
 nodejs-scan-sast:
   rules:
-    - if:
-      changes:
-      - backend/*
+    - changes:
+      - frontend/*
 
 semgrep-sast:
   rules:
-    - if:
-      changes:
-      - backend/*
+    - changes:
+      - frontend/*
