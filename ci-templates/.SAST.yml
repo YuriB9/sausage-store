@@ -1,8 +1,4 @@
 
-workflow:
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-
 spotbugs-sast:
   dependencies:
     - build-backend-code-job
@@ -10,6 +6,9 @@ spotbugs-sast:
     SAST_JAVA_VERSION: 11
     MAVEN_REPO_PATH: $CI_PROJECT_DIR/.m2/repository
     COMPILE: "false"
+  rules:
+    changes:
+    - backend/*
   artifacts:
     reports:
       sast: gl-sast-report.json
