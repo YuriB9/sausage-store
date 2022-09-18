@@ -6,6 +6,28 @@ spotbugs-sast:
     SAST_JAVA_VERSION: 11
     MAVEN_REPO_PATH: $CI_PROJECT_DIR/.m2/repository
     COMPILE: "false"
+  rules:
+    - if:
+      changes:
+      - backend/*
   artifacts:
     reports:
       sast: gl-sast-report.json
+
+eslint-sast:
+  rules:
+    - if:
+      changes:
+      - backend/*
+
+nodejs-scan-sast:
+  rules:
+    - if:
+      changes:
+      - backend/*
+
+semgrep-sast:
+  rules:
+    - if:
+      changes:
+      - backend/*
