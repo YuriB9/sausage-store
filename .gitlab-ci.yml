@@ -11,3 +11,10 @@ include:
    - local: '/ci-templates/.frontend.yml'
    - template: Security/SAST.gitlab-ci.yml
    - local: '/ci-templates/.SAST.yml'
+
+.sast_template: &sast_config
+  rules:
+    - if:
+      changes:
+      - backend/*
+      - frontend/*
