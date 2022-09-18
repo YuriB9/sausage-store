@@ -1,6 +1,5 @@
 
 spotbugs-sast:
-  <<: *sast_config
   dependencies:
     - build-backend-code-job
   variables:
@@ -10,12 +9,3 @@ spotbugs-sast:
   artifacts:
     reports:
       sast: gl-sast-report.json
-
-eslint-sast:
-  <<: *sast_config
-
-nodejs-scan-sast:
-  <<: *sast_config
-
-semgrep-sast:
-  <<: *sast_config
