@@ -7,8 +7,9 @@ spotbugs-sast:
     MAVEN_REPO_PATH: $CI_PROJECT_DIR/.m2/repository
     COMPILE: "false"
   rules:
-    changes:
-    - backend/*
+    - if:
+      changes:
+      - backend/*
   artifacts:
     reports:
       sast: gl-sast-report.json
