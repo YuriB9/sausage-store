@@ -22,6 +22,14 @@ slack-notification-frontend:
   variables:
     DATA: '{"text":"Юрий Батков собрал frontend. \n <${CI_PROJECT_URL}/-/jobs/artifacts/${CI_COMMIT_REF_NAME}/download?job=build-frontend-code-job|Fronteend Artifact>"}'
   script:
-    - curl -X POST -H "${CONTENT_TYPE}" --data "${DATA}" "${SLACK_WEBHOOK}"
+    - >
+      JOB_BACK=$(curl --silent --show-error
+      --request GET
+      --header "Content-type: application/json"
+      "$CI_API_V4_URL/projects/$CI_PROJECT_ID/pipelines/$CI_PIPELINE_ID/jobs"
+      |
+      jq -c '.[] | select(.name | contains("build-backend-code-job"))'
+    - echo "$JOB_BACK"
+    #- curl -X POST -H "${CONTENT_TYPE}" --data "${DATA}" "${SLACK_WEBHOOK}"
   needs:
     - build-frontend-code-job

@@ -22,6 +22,6 @@ slack-notification-backend:
   variables:
     DATA: '{"text":"Юрий Батков собрал backend. \n <${CI_PROJECT_URL}/-/jobs/artifacts/${CI_COMMIT_REF_NAME}/download?job=build-backend-code-job|Backend Artifact>"}'
   script:
-    - curl -X POST -H "${CONTENT_TYPE}" --data "${DATA}" "${SLACK_WEBHOOK}"
+    #- curl -X POST -H "${CONTENT_TYPE}" --data "${DATA}" "${SLACK_WEBHOOK}"
   needs:
     - build-backend-code-job
