@@ -22,7 +22,7 @@ slack-notification-backend:
       changes:
       - backend/*
   variables:
-    DATA: '{"text":"Юрий Батков собрал backend. \n <${CI_PROJECT_URL}/-/jobs/artifacts/${CI_COMMIT_REF_NAME}/download?job=build-backend-code-job|Backend Artifact>"}'
+    DATA: '{"text":"Юрий Батков собрал backend. \n <${CI_PROJECT_URL}/-/jobs/${JOB_ID_BACK}/artifacts/download|Backend Artifact>"}'
   script:
     - echo "$DATA"
     #
@@ -32,5 +32,3 @@ slack-notification-backend:
     #  --header "Content-type: application/json"
     #  --data "${DATA}"
     #  "${SLACK_WEBHOOK}"
-  needs:
-    - build-backend-code-job

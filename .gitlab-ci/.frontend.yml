@@ -32,5 +32,3 @@ slack-notification-frontend:
     #  --header "Content-type: application/json"
     #  --data "${DATA}"
     #  "${SLACK_WEBHOOK}"
-  needs:
-    - build-frontend-code-job
