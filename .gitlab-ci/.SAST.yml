@@ -1,14 +1,12 @@
 
 spotbugs-sast:
-  dependencies:
-    - build-backend-code-job
+  rules:
+    - changes:
+      - backend/*
   variables:
     SAST_JAVA_VERSION: 11
     MAVEN_REPO_PATH: $CI_PROJECT_DIR/.m2/repository
     COMPILE: "false"
-  rules:
-    - changes:
-      - backend/*
   artifacts:
     reports:
       sast: gl-sast-report.json
