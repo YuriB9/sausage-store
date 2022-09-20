@@ -7,6 +7,6 @@ stages:
 include:
    - template: Security/SAST.gitlab-ci.yml
    - local: '/.gitlab-ci/.backend.yml'
-   #- local: '/.gitlab-ci/.frontend.yml'
+   - local: '/.gitlab-ci/.frontend.yml'
    - local: '/.gitlab-ci/.SAST.yml'
    #- local: '/.gitlab-ci/.sonarqube.yml'
