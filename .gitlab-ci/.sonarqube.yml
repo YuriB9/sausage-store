@@ -3,7 +3,7 @@ sonarqube-backend-check:
   stage: sonar
   rules:
     - changes:
-      - backend/*
+      - backend/**/*
   needs:
     - build-backend
   allow_failure: true
@@ -28,7 +28,7 @@ sonarqube-frontend-check:
   stage: sonar
   rules:
     - changes:
-      - frontend/*
+      - frontend/**/*
   needs:
     - build-frontend
   allow_failure: true
