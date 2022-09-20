@@ -3,7 +3,7 @@ spotbugs-sast:
   rules:
     - changes:
       - backend/**/*
-  needs:
+  dependencies:
     - build-backend
   variables:
     SAST_JAVA_VERSION: 11
@@ -17,14 +17,14 @@ eslint-sast:
   rules:
     - changes:
       - frontend/**/*
-  needs:
+  dependencies:
     - build-frontend
 
 nodejs-scan-sast:
   rules:
     - changes:
       - frontend/**/*
-  needs:
+  dependencies:
     - build-frontend
 
 semgrep-sast:
@@ -32,6 +32,6 @@ semgrep-sast:
     - changes:
       - frontend/**/*
       - backend/**/*
-  needs:
+  dependencies:
     - build-frontend
     - build-backend
