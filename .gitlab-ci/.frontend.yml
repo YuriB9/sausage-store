@@ -1,0 +1,36 @@
+
+build-frontend-code-job:
+  stage: build
+  rules:
+    - changes:
+      - frontend/*
+  script:
+    - echo JOB_ID_FRONT=$CI_JOB_ID >> front.env
+    - cd frontend
+    - npm install
+    - npm run build
+  artifacts:
+    reports:
+      dotenv: front.env
+    paths:
+      - frontend/dist/frontend
+
+slack-notification-frontend:
+  stage: notify
+  rules:
+    - if: '$CI_COMMIT_MESSAGE =~ /send notification/'
+      changes:
+      - backend/*
+  variables:
+    DATA: '{"text":"Юрий Батков собрал frontend. \n <${CI_PROJECT_URL}/-/jobs/${JOB_ID_FRONT}/artifacts/download|Frontend Artifact>"}'
+  script:
+    - echo "$DATA"
+    #
+    #- >
+    #  curl
+    #  --request POST
+    #  --header "Content-type: application/json"
+    #  --data "${DATA}"
+    #  "${SLACK_WEBHOOK}"
+  needs:
+    - build-frontend-code-job

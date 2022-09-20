@@ -27,3 +27,4 @@ semgrep-sast:
   rules:
     - changes:
       - frontend/*
+      - backend/*
