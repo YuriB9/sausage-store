@@ -2,7 +2,7 @@
 spotbugs-sast:
   rules:
     - changes:
-      - backend/*
+      - backend/**/*
   needs:
     - build-backend
   variables:
@@ -16,22 +16,22 @@ spotbugs-sast:
 eslint-sast:
   rules:
     - changes:
-      - frontend/*
+      - frontend/**/*
   needs:
     - build-frontend
 
 nodejs-scan-sast:
   rules:
     - changes:
-      - frontend/*
+      - frontend/**/*
   needs:
     - build-frontend
 
 semgrep-sast:
   rules:
     - changes:
-      - frontend/*
-      - backend/*
+      - frontend/**/*
+      - backend/**/*
   needs:
     - build-frontend
     - build-backend

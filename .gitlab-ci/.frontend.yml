@@ -1,9 +1,9 @@
 
 build-frontend:
   stage: build
-  rules:
-    - changes:
-      - frontend/*
+  only:
+    changes:
+      - frontend/**/*
   script:
     - echo JOB_ID_FRONT=$CI_JOB_ID >> front.env
     - cd frontend
@@ -24,8 +24,6 @@ slack-notification-frontend:
   stage: notify
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /send notification/'
-      changes:
-      - backend/*
   script:
     - |-
         DATA=$(cat << JSON
