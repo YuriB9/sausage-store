@@ -5,7 +5,8 @@ sonarqube-backend-check:
     - changes:
       - backend/*
   needs:
-    - build-backend-code-job
+    - build-backend
+  allow_failure: true
   image: maven:3.8-openjdk-16
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
@@ -22,7 +23,6 @@ sonarqube-backend-check:
       -Dsonar.projectName=09_YURIBATKOV_BACKEND
       -Dsonar.host.url=${SONAR_HOST_URL}
       -Dsonar.login=${SONAR_TOKEN_FRONT}
-  allow_failure: true
 
 sonarqube-frontend-check:
   stage: sonar
@@ -30,7 +30,8 @@ sonarqube-frontend-check:
     - changes:
       - frontend/*
   needs:
-    - build-frontend-code-job
+    - build-frontend
+  allow_failure: true
   image:
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
@@ -49,4 +50,3 @@ sonarqube-frontend-check:
       -Dsonar.projectName=09_YURIBATKOV_FRONTEND
       -Dsonar.host.url=${SONAR_HOST_URL}
       -Dsonar.login=${SONAR_TOKEN_BACK}
-  allow_failure: true

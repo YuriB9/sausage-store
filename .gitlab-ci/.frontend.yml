@@ -1,5 +1,5 @@
 
-build-frontend-code-job:
+build-frontend:
   stage: build
   rules:
     - changes:
@@ -15,15 +15,25 @@ build-frontend-code-job:
     paths:
       - frontend/dist/frontend
 
+# TODO:
+# 1. implement generic notification templates
+# 2. implement failed\success notifications (depends on test results)
+# 3. implement cool slack message template
+
 slack-notification-frontend:
   stage: notify
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /send notification/'
       changes:
       - backend/*
-  variables:
-    DATA: '{"text":"Юрий Батков собрал frontend. \n <${CI_PROJECT_URL}/-/jobs/${JOB_ID_FRONT}/artifacts/download|Frontend Artifact>"}'
   script:
+    - |-
+        DATA=$(cat << JSON
+        {
+          "text":"Юрий Батков собрал frontend. <${CI_PROJECT_URL}/-/jobs/${JOB_ID_FRONT}/artifacts/download|Frontend Artifact>"
+        }
+        JSON
+        )
     - echo "$DATA"
     #
     #- >

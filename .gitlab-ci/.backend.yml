@@ -1,5 +1,5 @@
 
-build-backend-code-job:
+build-backend:
   stage: build
   rules:
     - changes:
@@ -21,9 +21,14 @@ slack-notification-backend:
     - if: '$CI_COMMIT_MESSAGE =~ /send notification/'
       changes:
       - backend/*
-  variables:
-    DATA: '{"text":"Юрий Батков собрал backend. \n <${CI_PROJECT_URL}/-/jobs/${JOB_ID_BACK}/artifacts/download|Backend Artifact>"}'
   script:
+    - |-
+        DATA=$(cat << JSON
+        {
+          "text":"Юрий Батков собрал backend. <${CI_PROJECT_URL}/-/jobs/${JOB_ID_FRONT}/artifacts/download|Backend Artifact>"
+        }
+        JSON
+        )
     - echo "$DATA"
     #
     #- >
