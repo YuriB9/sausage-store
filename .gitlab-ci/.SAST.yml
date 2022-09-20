@@ -1,5 +1,4 @@
 
-# test comment
 spotbugs-sast:
   rules:
     - changes:
