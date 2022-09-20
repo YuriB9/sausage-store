@@ -3,7 +3,7 @@ build-backend:
   stage: build
   rules:
     - changes:
-      - backend/*
+      - backend/**/*
   script:
     - echo JOB_ID_BACK=$CI_JOB_ID >> back.env
     - cd backend
@@ -20,7 +20,7 @@ slack-notification-backend:
   rules:
     - if: '$CI_COMMIT_MESSAGE =~ /send notification/'
       changes:
-      - backend/*
+      - backend/**/*
   script:
     - |-
         DATA=$(cat << JSON
