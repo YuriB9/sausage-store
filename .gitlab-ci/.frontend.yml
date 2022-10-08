@@ -42,12 +42,11 @@ slack-notification-frontend:
     - |-
         DATA=$(cat << JSON
         {
-          "text":"Юрий Батков собрал frontend. <${CI_PROJECT_URL}/-/jobs/${JOB_ID_FRONT}/artifacts/download|Frontend Artifact>"
+          "text":"YB - Вышла новая версия frontend сосисочной — ${VERSION}. Скачать frontend можно по ссылке — <${NEXUS_REPO_URL}/repository/09-sausage-store-batkov-yuriy-frontend/sausage-store/${VERSION}/sausage-store-${VERSION}.tar.gz|Frontend ${VERSION}>"
         }
         JSON
         )
     - echo "$DATA"
-    #
     #- >
     #  curl
     #  --request POST

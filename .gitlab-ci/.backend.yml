@@ -34,12 +34,11 @@ slack-notification-backend:
     - |-
         DATA=$(cat << JSON
         {
-          "text":"Юрий Батков собрал backend. <${CI_PROJECT_URL}/-/jobs/${JOB_ID_FRONT}/artifacts/download|Backend Artifact>"
+          "text":"YB - Вышла новая версия backend сосисочной — ${VERSION}. Скачать backend можно по ссылке — <${NEXUS_REPO_URL}/repository/09-sausage-store-batkov-yuriy-backend/com/yandex/practicum/devops/sausage-store/${VERSION}/sausage-store-${VERSION}.jar|Backend ${VERSION}>"
         }
         JSON
         )
     - echo "$DATA"
-    #
     #- >
     #  curl
     #  --request POST
