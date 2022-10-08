@@ -36,8 +36,8 @@ upload-frontend-release:
 
 slack-notification-frontend:
   stage: notify
-  rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /send notification/'
+  #rules:
+    #- if: '$CI_COMMIT_MESSAGE =~ /send notification/'
   script:
     - |-
         DATA=$(cat << JSON
