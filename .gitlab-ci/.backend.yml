@@ -28,8 +28,11 @@ upload-backend-release:
 
 slack-notification-backend:
   stage: notify
-  rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /send notification/'
+  only:
+    changes:
+      - backend/**/*
+    variables:
+      - '$CI_COMMIT_MESSAGE =~ /send notification/'
   script:
     - |-
         DATA=$(cat << JSON
@@ -38,10 +41,10 @@ slack-notification-backend:
         }
         JSON
         )
-    - echo "$DATA"
-    - >
-      curl
-      --request POST
-      --header "Content-type: application/json"
-      --data "${DATA}"
-      "${SLACK_WEBHOOK}"
+    #- echo "$DATA"
+    #- >
+    #  curl
+    #  --request POST
+    #  --header "Content-type: application/json"
+    #  --data "${DATA}"
+    #  "${SLACK_WEBHOOK}"
