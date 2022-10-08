@@ -39,9 +39,9 @@ slack-notification-backend:
         JSON
         )
     - echo "$DATA"
-    #- >
-    #  curl
-    #  --request POST
-    #  --header "Content-type: application/json"
-    #  --data "${DATA}"
-    #  "${SLACK_WEBHOOK}"
+    - >
+      curl
+      --request POST
+      --header "Content-type: application/json"
+      --data "${DATA}"
+      "${SLACK_WEBHOOK}"
