@@ -15,6 +15,17 @@ build-backend:
       - ${CI_PROJECT_DIR}/.m2/
       - backend/target/sausage-store-${VERSION}.jar
 
+upload-backend-release:
+  stage: release
+  only:
+    changes:
+      - backend/**/*
+  needs:
+    - build-backend
+  script:
+    - cd backend
+    - mvn -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository -s settings.xml -Dversion.application=${VERSION} -DskipTests deploy
+
 slack-notification-backend:
   stage: notify
   rules:
