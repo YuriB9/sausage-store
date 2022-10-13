@@ -1,4 +1,9 @@
 
+stages:
+   - build
+   - release
+   - notify
+
 build-backend:
   stage: build
   only:
