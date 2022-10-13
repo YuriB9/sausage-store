@@ -12,7 +12,7 @@ stages:
 deploy:
   stage: deploy
   script:
-     - ssh student@84.252.128.3 "id"
+     - ssh russia\batkovy@84.252.128.3 "id"
 
 #stages:
 #   - module-pipelines
