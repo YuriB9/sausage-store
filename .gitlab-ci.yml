@@ -1,11 +1,11 @@
 
 before_script:
-  - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+  - 'command -v ssh-agent >/dev/null || ( ( apt-get update -y && apt-get install openssh-client -y )'
   - eval $(ssh-agent -s)
   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
   - mkdir -p ~/.ssh
   - chmod 600 ~/.ssh
-  - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+  - ssh-keyscan ${DEV_HOST} >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
 
 stages:
@@ -14,7 +14,7 @@ stages:
 deploy:
   stage: deploy
   script:
-     - ssh student@84.252.128.3 "id"
+     - ssh ${DEV_USER}@${DEV_HOST} "id"
 
 #stages:
 #   - module-pipelines
