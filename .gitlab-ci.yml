@@ -1,29 +1,46 @@
+
+before_script:
+  - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 600 ~/.ssh
+
 stages:
-   - module-pipelines
+  - deploy
 
-variables:
-   VERSION: 1.0.${CI_PIPELINE_ID}
-   JAVA_OPTS: -XX:MaxRAMPercentage=90
+deploy:
+  stage: deploy
+  script:
+     - ssh ${DEV_USER}@${DEV_HOST} "id"
 
-frontend:
-   stage: module-pipelines
-   trigger:
-      include:
-         - local: "/.gitlab-ci/.frontend.yml"
-      strategy: depend
-   only:
-      changes:
-         - frontend/**/*
+#stages:
+#   - module-pipelines
 
-backend:
-   stage: module-pipelines
-   trigger:
-      include:
-         - local: "/.gitlab-ci/.backend.yml"
-      strategy: depend
-   only:
-      changes:
-         - backend/**/*
+#variables:
+#   VERSION: 1.0.${CI_PIPELINE_ID}
+#   JAVA_OPTS: -XX:MaxRAMPercentage=90
+
+#frontend:
+#   stage: module-pipelines
+#   trigger:
+#      include:
+#         - local: "/.gitlab-ci/.frontend.yml"
+#      strategy: depend
+#   only:
+#      changes:
+#         - frontend/**/*
+
+#backend:
+#   stage: module-pipelines
+#   trigger:
+#      include:
+#         - local: "/.gitlab-ci/.backend.yml"
+#      strategy: depend
+#   only:
+#      changes:
+#         - backend/**/*
+
 #include:
 #- local: '/.gitlab-ci/.backend.yml'
 #- local: '/.gitlab-ci/.frontend.yml'
