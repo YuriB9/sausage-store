@@ -2,6 +2,7 @@
 stages:
    - build
    - release
+   - deploy
    - notify
 
 build-frontend:
@@ -33,6 +34,19 @@ upload-frontend-release:
     - >
       curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}"
       --upload-file sausage-store-${VERSION}.tar.gz ${NEXUS_REPO_URL}/repository/09-sausage-store-batkov-yuriy-frontend/sausage-store/${VERSION}/sausage-store-${VERSION}.tar.gz
+
+deploy:
+  stage: deploy
+  script:
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 600 ~/.ssh
+    - ssh-keyscan ${DEV_HOST} >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+    - ssh ${DEV_USER}@${DEV_HOST} "export "CURRENT_VERSION=${VERSION}"; export "VERSION=${VERSION}"; export "DEV_HOST=${DEV_HOST}";export "NEXUS_REPO_URL=${NEXUS_REPO_URL}"; export "NEXUS_REPO_USER=${NEXUS_REPO_USER}"; export "NEXUS_REPO_PASS=${NEXUS_REPO_PASS}";setsid /bin/bash -s " < ./frontend/deploy.sh
 
 # TODO:
 # 1. implement generic notification templates
