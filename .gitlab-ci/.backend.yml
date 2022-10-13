@@ -7,28 +7,41 @@ build-backend:
   script:
     - echo JOB_ID_BACK=$CI_JOB_ID >> back.env
     - cd backend
-    - mvn package -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository
+    - mvn package -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository -Dversion.application=${VERSION}
   artifacts:
     reports:
       dotenv: back.env
     paths:
       - ${CI_PROJECT_DIR}/.m2/
-      - backend/target/sausage-store-0.0.1-SNAPSHOT.jar
+      - backend/target/sausage-store-${VERSION}.jar
+
+upload-backend-release:
+  stage: release
+  only:
+    changes:
+      - backend/**/*
+  needs:
+    - build-backend
+  script:
+    - cd backend
+    - mvn -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository -s settings.xml -Dversion.application=${VERSION} -DskipTests deploy
 
 slack-notification-backend:
   stage: notify
-  rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /send notification/'
+  only:
+    changes:
+      - backend/**/*
+    variables:
+      - '$CI_COMMIT_MESSAGE =~ /send notification/'
   script:
     - |-
         DATA=$(cat << JSON
         {
-          "text":"Юрий Батков собрал backend. <${CI_PROJECT_URL}/-/jobs/${JOB_ID_FRONT}/artifacts/download|Backend Artifact>"
+          "text":"YB - Вышла новая версия backend сосисочной — ${VERSION}. Скачать backend можно по ссылке — <${NEXUS_REPO_URL}/repository/09-sausage-store-batkov-yuriy-backend/com/yandex/practicum/devops/sausage-store/${VERSION}/sausage-store-${VERSION}.jar|Backend ${VERSION}>"
         }
         JSON
         )
-    - echo "$DATA"
-    #
+    #- echo "$DATA"
     #- >
     #  curl
     #  --request POST

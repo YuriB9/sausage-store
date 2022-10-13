@@ -10,10 +10,11 @@
     </parent>
     <groupId>com.yandex.practicum.devops</groupId>
     <artifactId>sausage-store</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${version.application}</version>
     <name>sausage-store</name>
     <description>Backend for sausage-store</description>
     <properties>
+        <version.application>0.0.1</version.application>
         <java.version>16</java.version>
         <sonar.projectKey>test_manual</sonar.projectKey>
         <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
@@ -116,5 +117,11 @@
             </plugin>
         </plugins>
     </build>
-
+    <distributionManagement>
+        <repository>
+            <id>sausage-store</id>
+            <name>sausage-store</name>
+            <url>${env.NEXUS_REPO_URL}/repository/09-sausage-store-batkov-yuriy-backend/</url>
+        </repository>
+    </distributionManagement>
 </project>

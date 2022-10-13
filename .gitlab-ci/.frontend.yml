@@ -15,6 +15,20 @@ build-frontend:
     paths:
       - frontend/dist/frontend
 
+upload-frontend-release:
+  stage: release
+  only:
+    changes:
+      - frontend/**/*
+  needs:
+    - build-frontend
+  script:
+    - cd frontend/dist
+    - tar czvf sausage-store-${VERSION}.tar.gz frontend
+    - >
+      curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}"
+      --upload-file sausage-store-${VERSION}.tar.gz ${NEXUS_REPO_URL}/repository/09-sausage-store-batkov-yuriy-frontend/sausage-store/${VERSION}/sausage-store-${VERSION}.tar.gz
+
 # TODO:
 # 1. implement generic notification templates
 # 2. implement failed\success notifications (depends on test results)
@@ -22,22 +36,23 @@ build-frontend:
 
 slack-notification-frontend:
   stage: notify
-  rules:
-    - if: '$CI_COMMIT_MESSAGE =~ /send notification/'
+  only:
+    changes:
+      - frontend/**/*
+    variables:
+      - '$CI_COMMIT_MESSAGE =~ /send notification/'
   script:
     - |-
         DATA=$(cat << JSON
         {
-          "text":"Юрий Батков собрал frontend. <${CI_PROJECT_URL}/-/jobs/${JOB_ID_FRONT}/artifacts/download|Frontend Artifact>"
+          "text":"YB - Вышла новая версия frontend сосисочной — ${VERSION}. Скачать frontend можно по ссылке — <${NEXUS_REPO_URL}/repository/09-sausage-store-batkov-yuriy-frontend/sausage-store/${VERSION}/sausage-store-${VERSION}.tar.gz|Frontend ${VERSION}>"
         }
         JSON
         )
     - echo "$DATA"
-    #
     #- >
     #  curl
     #  --request POST
     #  --header "Content-type: application/json"
     #  --data "${DATA}"
     #  "${SLACK_WEBHOOK}"
-
