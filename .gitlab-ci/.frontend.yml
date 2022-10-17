@@ -38,7 +38,7 @@ upload-frontend-release:
 deploy:
   stage: deploy
   environment:
-    name: production
+    name: production-front
     url: http://84.252.128.3/
   script:
     - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
