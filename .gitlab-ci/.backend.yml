@@ -55,6 +55,7 @@ deploy:
       export "PSQL_DBNAME=${PSQL_DBNAME}";
       export "PSQL_HOST=${PSQL_HOST}";
       export "PSQL_USER=${PSQL_USER}";
+      export "PSQL_PORT=${PSQL_PORT}";
       export "PSQL_PASSWORD=${PSQL_PASSWORD}";
       setsid /bin/bash -s " < ./backend/deploy.sh
 
