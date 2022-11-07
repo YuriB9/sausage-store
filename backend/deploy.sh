@@ -9,7 +9,6 @@ curl -u ${NEXUS_REPO_USER}:${NEXUS_REPO_PASS} -o sausage-store.jar ${NEXUS_REPO_
 sudo cp ./sausage-store.jar /home/jarservice/sausage-store.jar||true #"jar||true" говорит, если команда обвалится — продолжай
 
 systemctl --user set-environment PSQL_DBNAME=${PSQL_DBNAME} PSQL_USER=${PSQL_USER} PSQL_PASSWORD=${PSQL_PASSWORD} PSQL_HOST=${PSQL_HOST} PSQL_PORT=${PSQL_PORT}
-#
 #Обновляем конфиг systemd с помощью рестарта
 systemctl --user daemon-reload
 #Перезапускаем сервис сосисочной
