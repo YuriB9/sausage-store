@@ -13,7 +13,7 @@ ExecStart=/usr/bin/java \
 --spring.datasource.url=jdbc:postgresql://${PSQL_HOST}:${PSQL_PORT}/${PSQL_DBNAME} \
 --spring.datasource.username=${PSQL_USER} \
 --spring.datasource.password=${PSQL_PASSWORD} \
---spring.data.mongodb.uri=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}?replicaSet=${MONGO_RS}$&tls=true
+--spring.data.mongodb.uri=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}?replicaSet=${MONGO_RS}&tls=true
 SuccessExitStatus=143
 
 [Install]
