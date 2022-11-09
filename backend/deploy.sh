@@ -8,7 +8,16 @@ sudo rm -f /home/jarservice/sausage-store.jar||true
 curl -u ${NEXUS_REPO_USER}:${NEXUS_REPO_PASS} -o sausage-store.jar ${NEXUS_REPO_URL}/repository/09-sausage-store-batkov-yuriy-backend/com/yandex/practicum/devops/sausage-store/${VERSION}/sausage-store-${VERSION}.jar
 sudo cp ./sausage-store.jar /home/jarservice/sausage-store.jar||true #"jar||true" говорит, если команда обвалится — продолжай
 
-systemctl --user set-environment PSQL_DBNAME=${PSQL_DBNAME} PSQL_USER=${PSQL_USER} PSQL_PASSWORD=${PSQL_PASSWORD} PSQL_HOST=${PSQL_HOST} PSQL_PORT=${PSQL_PORT}
+systemctl --user set-environment PSQL_DBNAME=${PSQL_DBNAME} \
+    PSQL_USER=${PSQL_USER} \
+    PSQL_PASSWORD=${PSQL_PASSWORD} \
+    PSQL_HOST=${PSQL_HOST} \
+    PSQL_PORT=${PSQL_PORT} \
+    MONGO_USER=${MONGO_USER} \
+    MONGO_PASSWORD=${MONGO_PASSWORD} \
+    MONGO_HOST=${MONGO_HOST} \
+    MONGO_PORT=${MONGO_PORT} \
+    MONGO_DATABASE=${MONGO_DATABASE}
 #Обновляем конфиг systemd с помощью рестарта
 systemctl --user daemon-reload
 #Перезапускаем сервис сосисочной
