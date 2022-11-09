@@ -63,6 +63,7 @@ deploy:
       export "MONGO_USER=${MONGO_USER}";
       export "MONGO_PASSWORD=${MONGO_PASSWORD}";
       export "MONGO_HOST=${MONGO_HOST}";
+      export "MONGO_RS=${MONGO_RS}";
       export "MONGO_PORT=${MONGO_PORT}";
       export "MONGO_DATABASE=${MONGO_DATABASE}";
       setsid /bin/bash -s " < ./backend/deploy.sh

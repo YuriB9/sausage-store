@@ -16,6 +16,7 @@ systemctl --user set-environment PSQL_DBNAME=${PSQL_DBNAME} \
     MONGO_USER=${MONGO_USER} \
     MONGO_PASSWORD=${MONGO_PASSWORD} \
     MONGO_HOST=${MONGO_HOST} \
+    MONGO_RS=${MONGO_RS} \
     MONGO_PORT=${MONGO_PORT} \
     MONGO_DATABASE=${MONGO_DATABASE}
 #Обновляем конфиг systemd с помощью рестарта
