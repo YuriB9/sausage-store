@@ -49,7 +49,16 @@ deploy:
     - ssh-keyscan ${DEV_HOST} >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 
-    - ssh ${DEV_USER}@${DEV_HOST} "export "CURRENT_VERSION=${VERSION}"; export "VERSION=${VERSION}"; export "DEV_HOST=${DEV_HOST}";export "NEXUS_REPO_URL=${NEXUS_REPO_URL}"; export "NEXUS_REPO_USER=${NEXUS_REPO_USER}"; export "NEXUS_REPO_PASS=${NEXUS_REPO_PASS}";setsid /bin/bash -s " < ./frontend/deploy.sh
+    - scp ./frontend/sausage-store-frontend-user.service ${DEV_FRONT_USER}@${DEV_HOST}:/home/${DEV_FRONT_USER}/sausage-store-frontend-user.service
+    - >
+      ssh ${DEV_FRONT_USER}@${DEV_HOST}
+      "export "CURRENT_VERSION=${VERSION}";
+      export "VERSION=${VERSION}";
+      export "DEV_HOST=${DEV_HOST}";
+      export "NEXUS_REPO_URL=${NEXUS_REPO_URL}";
+      export "NEXUS_REPO_USER=${NEXUS_REPO_USER}";
+      export "NEXUS_REPO_PASS=${NEXUS_REPO_PASS}";
+      setsid /bin/bash -s " < ./frontend/deploy.sh
 
 # TODO:
 # 1. implement generic notification templates
