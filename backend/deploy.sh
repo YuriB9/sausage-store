@@ -18,7 +18,8 @@ systemctl --user set-environment PSQL_DBNAME=${PSQL_DBNAME} \
     MONGO_HOST=${MONGO_HOST} \
     MONGO_RS=${MONGO_RS} \
     MONGO_PORT=${MONGO_PORT} \
-    MONGO_DATABASE=${MONGO_DATABASE}
+    MONGO_DATABASE=${MONGO_DATABASE} \
+    SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED}
 #Обновляем конфиг systemd с помощью рестарта
 systemctl --user daemon-reload
 #Перезапускаем сервис сосисочной

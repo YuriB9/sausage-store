@@ -66,6 +66,7 @@ deploy:
       export "MONGO_RS=${MONGO_RS}";
       export "MONGO_PORT=${MONGO_PORT}";
       export "MONGO_DATABASE=${MONGO_DATABASE}";
+      export "SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED}";
       setsid /bin/bash -s " < ./backend/deploy.sh
 
 slack-notification-backend:
