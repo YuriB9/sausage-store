@@ -48,9 +48,6 @@ deploy-backend:
   environment:
     name: production-back
     url: http://84.252.128.3/
-  only:
-    changes:
-      - backend/**/*
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: manual
