@@ -50,7 +50,8 @@ deploy-frontend:
 
     - >
       ssh ${DEV_USER}@${DEV_HOST}
-      "/bin/bash -s " < ./frontend/frontend_deploy.sh
+      "export "CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE}";
+      /bin/bash -s " < ./frontend/frontend_deploy.sh
 
 # TODO:
 # 1. implement generic notification templates
