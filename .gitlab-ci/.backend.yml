@@ -22,9 +22,9 @@ build-backend:
     - >
       docker build
       --build-arg VERSION=$VERSION
-      --tag $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
+      --tag $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
       .
-    - docker push $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
 
 upload-backend-latest:
   stage: release
@@ -38,8 +38,8 @@ upload-backend-latest:
     - until docker info; do sleep 1; done
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker pull $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA
-    - docker tag $CI_REGISTRY_IMAGE/sausage-backend:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/sausage-backend:latest
+    - docker pull $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
+    - docker tag $CI_REGISTRY_IMAGE/sausage-backend:$VERSION $CI_REGISTRY_IMAGE/sausage-backend:latest
     - docker push $CI_REGISTRY_IMAGE/sausage-backend:latest
 
 deploy-backend:
@@ -57,12 +57,7 @@ deploy-backend:
     - ssh-keyscan ${DEV_HOST} >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 
-    - echo ${MONGO_USER}
-    - echo ${MONGO_PASSWORD}
-    - echo ${MONGO_HOST}
-    - echo ${MONGO_PORT}
-    - echo ${MONGO_DATABASE}
-    - echo ${MONGO_RS}
+    - echo $CI_REGISTRY_IMAGE
     - >
       ssh ${DEV_USER}@${DEV_HOST}
       "export "VERSION=${VERSION}";
