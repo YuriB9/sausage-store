@@ -65,6 +65,7 @@ deploy-backend:
        export "SPRING_DATASOURCE_PASSWORD=${PSQL_PASSWORD}";
        export "SPRING_DATA_MONGODB_URI=${MONGO_DATA}";
        export "SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED}";
+       export "REPORT_PATH=${REPORT_PATH}";
       /bin/bash -s " < ./backend/backend_deploy.sh
 
 slack-notification-backend:
