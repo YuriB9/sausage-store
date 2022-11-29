@@ -1,9 +1,11 @@
 include:
   - project: 'templates/ci'
     file: 'DockerInDockerTemplate.yml'
+  - template: Jobs/Container-Scanning.gitlab-ci.yml
 
 stages:
    - build
+   - test
    - release
    - deploy
    - notify
@@ -22,6 +24,17 @@ build-frontend:
       --tag $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
       .
     - docker push $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
+
+container_vulnerability_scanning:
+  extends: container_scanning
+  stage: test
+  tags:
+    - docker-privileged
+  variables:
+    CS_IMAGE: $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
+  artifacts:
+    paths:
+      - frontend-container-scanning-report.json
 
 upload-frontend-latest:
   stage: release
