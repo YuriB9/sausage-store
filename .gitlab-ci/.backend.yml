@@ -57,13 +57,14 @@ deploy-backend:
     - ssh-keyscan ${DEV_HOST} >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 
+    - echo ${MONGO_URI}
     - >
       ssh ${DEV_USER}@${DEV_HOST}
       "export "VERSION=${VERSION}";
        export "SPRING_DATASOURCE_URL=${PSQL_DATASOURCE}";
        export "SPRING_DATASOURCE_USERNAME=${PSQL_USER}";
        export "SPRING_DATASOURCE_PASSWORD=${PSQL_PASSWORD}";
-       export "SPRING_DATA_MONGODB_URI=${MONGO_DATA}";
+       export "SPRING_DATA_MONGODB_URI=${MONGO_URI}";
        export "SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED}";
        export "REPORT_PATH=${REPORT_PATH}";
       /bin/bash -s " < ./backend/backend_deploy.sh
