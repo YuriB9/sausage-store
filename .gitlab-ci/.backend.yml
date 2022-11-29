@@ -57,7 +57,6 @@ deploy-backend:
     - ssh-keyscan ${DEV_HOST} >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 
-    - echo $CI_REGISTRY_IMAGE
     - >
       ssh ${DEV_USER}@${DEV_HOST}
       "export "VERSION=${VERSION}";
@@ -72,6 +71,7 @@ deploy-backend:
        export "MONGO_RS=${MONGO_RS}";
        export "SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED}";
        export "REPORT_PATH=${REPORT_PATH}";
+       export "CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE}";
       /bin/bash -s " < ./backend/backend_deploy.sh
 
 slack-notification-backend:
