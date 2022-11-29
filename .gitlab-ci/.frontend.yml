@@ -3,6 +3,11 @@ include:
     file: 'DockerInDockerTemplate.yml'
   - template: Security/Container-Scanning.gitlab-ci.yml
 
+container_scanning:
+  variables:
+    CS_IMAGE: $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
+    GIT_STRATEGY: fetch
+
 stages:
    - build
    - test
@@ -24,12 +29,6 @@ build-frontend:
       --tag $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
       .
     - docker push $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
-
-container_vulnerability_scanning:
-  extends: container_scanning
-  stage: test
-  variables:
-    CS_IMAGE: $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
 
 upload-frontend-latest:
   stage: release
