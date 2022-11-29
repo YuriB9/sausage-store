@@ -1,3 +1,6 @@
+include:
+  - project: 'templates/ci'
+    file: 'DockerInDockerTemplate.yml'
 
 stages:
    - build
@@ -7,41 +10,46 @@ stages:
 
 build-frontend:
   stage: build
+  image: docker:20.10.12-dind-rootless
   only:
     changes:
       - frontend/**/*
+  before_script:
+    - until docker info; do sleep 1; done
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - echo JOB_ID_FRONT=$CI_JOB_ID >> front.env
     - cd frontend
-    - npm install
-    - npm run build
-  artifacts:
-    reports:
-      dotenv: front.env
-    paths:
-      - frontend/dist/frontend
+    - >
+      docker build
+      --build-arg VERSION=$VERSION
+      --tag $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
+      .
+    - docker push $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
 
-upload-frontend-release:
+upload-frontend-latest:
   stage: release
+  image: docker:20.10.12-dind-rootless
   only:
     changes:
       - frontend/**/*
-  needs:
-    - build-frontend
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+    - until docker info; do sleep 1; done
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - cd frontend/dist
-    - tar czvf sausage-store-${VERSION}.tar.gz frontend
-    - >
-      curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}"
-      --upload-file sausage-store-${VERSION}.tar.gz ${NEXUS_REPO_URL}/repository/09-sausage-store-batkov-yuriy-frontend/sausage-store/${VERSION}/sausage-store-${VERSION}.tar.gz
+    - docker pull $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
+    - docker tag $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION $CI_REGISTRY_IMAGE/sausage-frontend:latest
+    - docker push $CI_REGISTRY_IMAGE/sausage-frontend:latest
 
-deploy:
+deploy-frontend:
   stage: deploy
-  environment:
-    name: production-front
-    url: http://84.252.128.3/
+  image: alpine:3.15.0
+  only:
+    changes:
+      - frontend/**/*
   script:
-    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - apk add openssh-client bash
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
@@ -49,16 +57,9 @@ deploy:
     - ssh-keyscan ${DEV_HOST} >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 
-    - scp ./frontend/sausage-store-frontend-user.service ${DEV_FRONT_USER}@${DEV_HOST}:/home/${DEV_FRONT_USER}/sausage-store-frontend-user.service
     - >
-      ssh ${DEV_FRONT_USER}@${DEV_HOST}
-      "export "CURRENT_VERSION=${VERSION}";
-      export "VERSION=${VERSION}";
-      export "DEV_HOST=${DEV_HOST}";
-      export "NEXUS_REPO_URL=${NEXUS_REPO_URL}";
-      export "NEXUS_REPO_USER=${NEXUS_REPO_USER}";
-      export "NEXUS_REPO_PASS=${NEXUS_REPO_PASS}";
-      setsid /bin/bash -s " < ./frontend/deploy.sh
+      ssh ${DEV_USER}@${DEV_HOST}
+      "/bin/bash -s " < ./frontend/frontend_deploy.sh
 
 # TODO:
 # 1. implement generic notification templates
