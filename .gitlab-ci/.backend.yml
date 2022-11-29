@@ -1,9 +1,17 @@
 include:
   - project: 'templates/ci'
     file: 'DockerInDockerTemplate.yml'
+  - template: Security/Container-Scanning.gitlab-ci.yml
+
+container_scanning:
+  variables:
+    CS_IMAGE: $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
+    GIT_STRATEGY: fetch
+    CS_DOCKERFILE_PATH: backend/Dockerfile
 
 stages:
    - build
+   - test
    - release
    - deploy
    - notify
