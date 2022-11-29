@@ -11,9 +11,6 @@ stages:
 build-backend:
   stage: build
   image: docker:20.10.12-dind-rootless
-  only:
-    changes:
-      - backend/**/*
   before_script:
     - until docker info; do sleep 1; done
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
@@ -29,9 +26,6 @@ build-backend:
 upload-backend-latest:
   stage: release
   image: docker:20.10.12-dind-rootless
-  only:
-    changes:
-      - backend/**/*
   variables:
     GIT_STRATEGY: none
   before_script:
@@ -45,9 +39,6 @@ upload-backend-latest:
 deploy-backend:
   stage: deploy
   image: alpine:3.15.0
-  only:
-    changes:
-      - backend/**/*
   script:
     - apk add openssh-client bash
     - eval $(ssh-agent -s)
@@ -77,8 +68,6 @@ deploy-backend:
 slack-notification-backend:
   stage: notify
   only:
-    changes:
-      - backend/**/*
     variables:
       - '$CI_COMMIT_MESSAGE =~ /send notification/'
   script:
