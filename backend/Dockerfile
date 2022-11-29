@@ -1,5 +1,5 @@
 # build
-FROM maven:3.8.2-openjdk-16-slim as builder
+FROM gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/maven:3.8.2-openjdk-16-slim as builder
 
 ARG VERSION=${VERSION}
 WORKDIR /usr/src/app
@@ -10,7 +10,7 @@ RUN curl https://storage.yandexcloud.net/cloud-certs/CA.pem -o YandexInternalRoo
     && mvn package -Dversion.application=${VERSION}
 
 # release
-FROM openjdk:16-jdk-alpine
+FROM gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/openjdk:16-jdk-alpine
 
 ARG VERSION=${VERSION}
 WORKDIR /app
