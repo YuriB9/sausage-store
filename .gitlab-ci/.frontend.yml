@@ -7,6 +7,7 @@ container_scanning:
   variables:
     CS_IMAGE: $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
     GIT_STRATEGY: fetch
+    CS_DOCKERFILE_PATH: frontend/Dockerfile
 
 stages:
    - build
