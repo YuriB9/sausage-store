@@ -21,4 +21,4 @@ RUN npm install --no-audit http-server
 COPY --chown=node:node --from=builder-client /home/node/app/dist ./dist/
 
 EXPOSE 80
-ENTRYPOINT ["node", "node_modules/.bin/http-server" , "dist/frontend/", "-p", "81","--proxy", "http://sausage-backend:8080"]
+ENTRYPOINT ["node", "node_modules/.bin/http-server" , "dist/frontend/", "-p", "80","--proxy", "http://sausage-backend:8080"]
