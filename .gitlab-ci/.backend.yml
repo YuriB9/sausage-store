@@ -27,14 +27,23 @@ build-backend:
   before_script:
     - until docker info; do sleep 1; done
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE/sausage-backend:latest
   script:
     - cd backend
     - >
       docker build
       --build-arg VERSION=$VERSION
+      --cache-from $CI_REGISTRY_IMAGE/sausage-backend:latest
       --tag $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
       .
     - docker push $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
+  after_script:
+    - docker create --name backend-app $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
+    - docker cp backend-app:/.m2/ ${CI_PROJECT_DIR}/.m2/
+  artifacts:
+    paths:
+      - ${CI_PROJECT_DIR}/.m2/
+
 
 upload-backend-latest:
   stage: release
