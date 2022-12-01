@@ -1,18 +1,18 @@
 include:
   - project: 'templates/ci'
     file: 'DockerInDockerTemplate.yml'
-  - template: Security/Container-Scanning.gitlab-ci.yml
-  - template: Security/SAST.gitlab-ci.yml
-  - local: '/.gitlab-ci/.SAST.backend.yml'
+#  - template: Security/Container-Scanning.gitlab-ci.yml
+#  - template: Security/SAST.gitlab-ci.yml
+#  - local: '/.gitlab-ci/.SAST.backend.yml'
 
-variables:
-  SAST_EXCLUDED_ANALYZERS: "eslint,nodejs-scan,semgrep"
+#variables:
+#  SAST_EXCLUDED_ANALYZERS: "eslint,nodejs-scan,semgrep"
 
-container_scanning:
-  variables:
-    CS_IMAGE: $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
-    GIT_STRATEGY: fetch
-    CS_DOCKERFILE_PATH: backend/Dockerfile
+#container_scanning:
+#  variables:
+#    CS_IMAGE: $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
+#    GIT_STRATEGY: fetch
+#    CS_DOCKERFILE_PATH: backend/Dockerfile
 
 stages:
    - build
@@ -21,15 +21,15 @@ stages:
    - deploy
    - notify
 
-build-m2:
-  stage: build
-  script:
-    - cd backend
-    - mvn package -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository -Dversion.application=${VERSION}
-  artifacts:
-    paths:
-      - ${CI_PROJECT_DIR}/.m2/
-      - backend/target/sausage-store-${VERSION}.jar
+#build-m2:
+#  stage: build
+#  script:
+#    - cd backend
+#    - mvn package -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository -Dversion.application=${VERSION}
+#  artifacts:
+#    paths:
+#      - ${CI_PROJECT_DIR}/.m2/
+#      - backend/target/sausage-store-${VERSION}.jar
 
 build-backend:
   stage: build
