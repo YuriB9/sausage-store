@@ -1,0 +1,21 @@
+eslint-sast:
+  rules:
+    - changes:
+      - frontend/**/*
+  dependencies:
+    - build-frontend
+  artifacts:
+    paths: [gl-sast-report.json]
+    reports:
+      sast: gl-sast-report.json
+
+nodejs-scan-sast:
+  rules:
+    - changes:
+      - frontend/**/*
+  dependencies:
+    - build-frontend
+  artifacts:
+    paths: [gl-sast-report.json]
+    reports:
+      sast: gl-sast-report.json

@@ -2,6 +2,11 @@ include:
   - project: 'templates/ci'
     file: 'DockerInDockerTemplate.yml'
   - template: Security/Container-Scanning.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+  - local: '/.gitlab-ci/.SAST.frontend.yml'
+
+variables:
+  SAST_EXCLUDED_ANALYZERS: "spotbugs,semgrep"
 
 container_scanning:
   variables:
@@ -22,14 +27,22 @@ build-frontend:
   before_script:
     - until docker info; do sleep 1; done
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE/sausage-frontend:latest
   script:
     - cd frontend
     - >
       docker build
       --build-arg VERSION=$VERSION
+      --cache-from $CI_REGISTRY_IMAGE/sausage-frontend:latest
       --tag $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
       .
     - docker push $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
+  #after_script:
+  #  - docker create --name frontend-app $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
+  #  - docker cp frontend-app:/home/node/app/dist/ ./dist/
+  #artifacts:
+  #  paths:
+  #    - ./dist
 
 upload-frontend-latest:
   stage: release

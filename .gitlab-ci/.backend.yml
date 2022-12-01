@@ -2,6 +2,11 @@ include:
   - project: 'templates/ci'
     file: 'DockerInDockerTemplate.yml'
   - template: Security/Container-Scanning.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+  - local: '/.gitlab-ci/.SAST.backend.yml'
+
+variables:
+  SAST_EXCLUDED_ANALYZERS: "eslint,nodejs-scan,semgrep"
 
 container_scanning:
   variables:
@@ -16,17 +21,29 @@ stages:
    - deploy
    - notify
 
+build-m2:
+  stage: build
+  script:
+    - cd backend
+    - mvn package -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository -Dversion.application=${VERSION}
+  artifacts:
+    paths:
+      - ${CI_PROJECT_DIR}/.m2/
+      - backend/target/sausage-store-${VERSION}.jar
+
 build-backend:
   stage: build
   image: docker:20.10.12-dind-rootless
   before_script:
     - until docker info; do sleep 1; done
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE/sausage-backend:latest
   script:
     - cd backend
     - >
       docker build
       --build-arg VERSION=$VERSION
+      --cache-from $CI_REGISTRY_IMAGE/sausage-backend:latest
       --tag $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
       .
     - docker push $CI_REGISTRY_IMAGE/sausage-backend:$VERSION

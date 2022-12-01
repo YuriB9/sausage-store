@@ -1,0 +1,15 @@
+
+spotbugs-sast:
+  rules:
+    - changes:
+      - backend/**/*
+  dependencies:
+    - build-m2
+  variables:
+    SAST_JAVA_VERSION: 11
+    MAVEN_REPO_PATH: $CI_PROJECT_DIR/.m2/repository
+    COMPILE: "false"
+  artifacts:
+    paths: [gl-sast-report.json]
+    reports:
+      sast: gl-sast-report.json
