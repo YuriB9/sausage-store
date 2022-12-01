@@ -7,7 +7,7 @@ FROM base AS builder-client
 WORKDIR /home/node/app
 USER node
 COPY --chown=node:node *.json ./
-RUN npm ci && npm cache clean
+RUN npm ci && npm cache clean --force
 COPY --chown=node:node src/ ./src/
 RUN npm run build
 
