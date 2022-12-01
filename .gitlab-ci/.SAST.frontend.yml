@@ -1,0 +1,13 @@
+eslint-sast:
+  rules:
+    - changes:
+      - frontend/**/*
+  dependencies:
+    - build-frontend
+
+nodejs-scan-sast:
+  rules:
+    - changes:
+      - frontend/**/*
+  dependencies:
+    - build-frontend
