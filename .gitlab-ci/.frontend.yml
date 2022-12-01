@@ -32,6 +32,13 @@ build-frontend:
       --tag $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
       .
     - docker push $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
+  after_script:
+    - docker create --name frontend-app $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
+    - mkdir -p /dist/frontend
+    - docker cp frontend-app:/dist/frontend /dist/frontend
+  artifacts:
+    paths:
+      - dist/frontend
 
 upload-frontend-latest:
   stage: release
