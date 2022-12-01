@@ -29,6 +29,7 @@ build-m2:
   artifacts:
     paths:
       - ${CI_PROJECT_DIR}/.m2/
+      - backend/target/sausage-store-${VERSION}.jar
 
 build-backend:
   stage: build
