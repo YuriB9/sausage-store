@@ -7,8 +7,8 @@ spotbugs-sast:
     - build-backend
   variables:
     SAST_JAVA_VERSION: 11
-    MAVEN_REPO_PATH: $CI_PROJECT_DIR/.m2/repository
-    COMPILE: "false"
+    #MAVEN_REPO_PATH: $CI_PROJECT_DIR/.m2/repository
+    COMPILE: "true"
   artifacts:
     reports:
       sast: gl-sast-report.json
