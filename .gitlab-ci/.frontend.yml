@@ -22,11 +22,13 @@ build-frontend:
   before_script:
     - until docker info; do sleep 1; done
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE/sausage-frontend:latest
   script:
     - cd frontend
     - >
       docker build
       --build-arg VERSION=$VERSION
+      --cache-from $CI_REGISTRY_IMAGE/sausage-frontend:latest
       --tag $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
       .
     - docker push $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
