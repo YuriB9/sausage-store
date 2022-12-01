@@ -1,18 +1,18 @@
 include:
   - project: 'templates/ci'
     file: 'DockerInDockerTemplate.yml'
-  - template: Security/Container-Scanning.gitlab-ci.yml
-  - template: Security/SAST.gitlab-ci.yml
-  - local: '/.gitlab-ci/.SAST.frontend.yml'
+#  - template: Security/Container-Scanning.gitlab-ci.yml
+#  - template: Security/SAST.gitlab-ci.yml
+#  - local: '/.gitlab-ci/.SAST.frontend.yml'
 
-variables:
-  SAST_EXCLUDED_ANALYZERS: "spotbugs,semgrep"
+#variables:
+#  SAST_EXCLUDED_ANALYZERS: "spotbugs,semgrep"
 
-container_scanning:
-  variables:
-    CS_IMAGE: $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
-    GIT_STRATEGY: fetch
-    CS_DOCKERFILE_PATH: frontend/Dockerfile
+#container_scanning:
+#  variables:
+#    CS_IMAGE: $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
+#    GIT_STRATEGY: fetch
+#    CS_DOCKERFILE_PATH: frontend/Dockerfile
 
 stages:
    - build
