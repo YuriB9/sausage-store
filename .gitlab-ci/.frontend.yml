@@ -2,8 +2,6 @@ include:
   - project: 'templates/ci'
     file: 'DockerInDockerTemplate.yml'
   - template: Security/Container-Scanning.gitlab-ci.yml
-  - template: Security/SAST.gitlab-ci.yml
-  - local: '/.gitlab-ci/.SAST.yml'
 
 container_scanning:
   variables:
@@ -34,12 +32,12 @@ build-frontend:
       --tag $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
       .
     - docker push $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
-  after_script:
-    - docker create --name frontend-app $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
-    - docker cp frontend-app:/home/node/app/dist/ ./dist/
-  artifacts:
-    paths:
-      - ./dist
+  #after_script:
+  #  - docker create --name frontend-app $CI_REGISTRY_IMAGE/sausage-frontend:$VERSION
+  #  - docker cp frontend-app:/home/node/app/dist/ ./dist/
+  #artifacts:
+  #  paths:
+  #    - ./dist
 
 upload-frontend-latest:
   stage: release

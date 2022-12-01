@@ -1,3 +1,6 @@
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  - local: '/.gitlab-ci/.SAST.yml'
 
 stages:
   - module-pipelines
