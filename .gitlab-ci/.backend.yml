@@ -21,6 +21,15 @@ stages:
    - deploy
    - notify
 
+build-m2:
+  stage: build
+  script:
+    - cd backend
+    - mvn package -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository -Dversion.application=${VERSION}
+  artifacts:
+    paths:
+      - ${CI_PROJECT_DIR}/.m2/
+
 build-backend:
   stage: build
   image: docker:20.10.12-dind-rootless
@@ -37,13 +46,6 @@ build-backend:
       --tag $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
       .
     - docker push $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
-  after_script:
-    - docker create --name backend-app $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
-    - docker cp backend-app:/.m2/ ${CI_PROJECT_DIR}/.m2/
-  artifacts:
-    paths:
-      - ${CI_PROJECT_DIR}/.m2/
-
 
 upload-backend-latest:
   stage: release

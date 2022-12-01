@@ -4,7 +4,7 @@ spotbugs-sast:
     - changes:
       - backend/**/*
   dependencies:
-    - build-backend
+    - build-m2
   variables:
     SAST_JAVA_VERSION: 11
     MAVEN_REPO_PATH: $CI_PROJECT_DIR/.m2/repository
