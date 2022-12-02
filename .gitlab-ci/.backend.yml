@@ -1,6 +1,10 @@
 include:
   - project: 'templates/ci'
     file: 'DockerInDockerTemplate.yml'
+
+#
+# Commented Security related lines to speed up the deploy
+#
 #  - template: Security/Container-Scanning.gitlab-ci.yml
 #  - template: Security/SAST.gitlab-ci.yml
 #  - local: '/.gitlab-ci/.SAST.backend.yml'
@@ -20,6 +24,8 @@ stages:
    - release
    - deploy
    - notify
+
+# To enable m2 cache for spotbug-sast
 
 #build-m2:
 #  stage: build
