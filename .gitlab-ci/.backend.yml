@@ -63,7 +63,7 @@ upload-backend-latest:
 
 deploy-backend:
   stage: deploy
-  image: alpine:3.15.0
+  image: vault:1.12.1
   script:
     - apk add openssh-client bash
     - eval $(ssh-agent -s)
@@ -73,14 +73,15 @@ deploy-backend:
     - ssh-keyscan ${DEV_HOST} >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 
+    - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=sausage-store jwt=$CI_JOB_JWT)"
     - >
       ssh ${DEV_USER}@${DEV_HOST}
       "export "VERSION=${VERSION}";
        export "SPRING_DATASOURCE_URL=${PSQL_DATASOURCE}";
-       export "SPRING_DATASOURCE_USERNAME=${PSQL_USER}";
-       export "SPRING_DATASOURCE_PASSWORD=${PSQL_PASSWORD}";
-       export "MONGO_USER=${MONGO_USER}";
-       export "MONGO_PASSWORD=${MONGO_PASSWORD}";
+       export "SPRING_DATASOURCE_USERNAME=$(vault kv get -field=spring.datasource.username secret/sausage-store)";
+       export "SPRING_DATASOURCE_PASSWORD=$(vault kv get -field=spring.datasource.password secret/sausage-store)";
+       export "MONGO_USER=$(vault kv get -field=mongo.username secret/sausage-store)";
+       export "MONGO_PASSWORD=$(vault kv get -field=mongo.password secret/sausage-store)";
        export "MONGO_HOST=${MONGO_HOST}";
        export "MONGO_PORT=${MONGO_PORT}";
        export "MONGO_DATABASE=${MONGO_DATABASE}";
