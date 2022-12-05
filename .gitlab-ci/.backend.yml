@@ -44,7 +44,8 @@ build-backend:
     entrypoint: [""]
   script:
     - /kaniko/executor
-      --context "${CI_PROJECT_DIR}"
+      --build-arg VERSION=$VERSION
+      --context "${CI_PROJECT_DIR}/backend/"
       --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
       --destination "${CI_REGISTRY_IMAGE}/sausage-backend:$VERSION"
 
