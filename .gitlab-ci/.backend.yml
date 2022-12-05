@@ -39,33 +39,14 @@ stages:
 
 build-backend:
   stage: build
-  image: docker:20.10.12-dind-rootless
-  before_script:
-    - until docker info; do sleep 1; done
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker pull $CI_REGISTRY_IMAGE/sausage-backend:latest
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.1-debug
+    entrypoint: [""]
   script:
-    - cd backend
-    - >
-      docker build
-      --build-arg VERSION=$VERSION
-      --cache-from $CI_REGISTRY_IMAGE/sausage-backend:latest
-      --tag $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
-      .
-    - docker push $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
-
-upload-backend-latest:
-  stage: release
-  image: docker:20.10.12-dind-rootless
-  variables:
-    GIT_STRATEGY: none
-  before_script:
-    - until docker info; do sleep 1; done
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker pull $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
-    - docker tag $CI_REGISTRY_IMAGE/sausage-backend:$VERSION $CI_REGISTRY_IMAGE/sausage-backend:latest
-    - docker push $CI_REGISTRY_IMAGE/sausage-backend:latest
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}/sausage-backend:$VERSION"
 
 deploy-backend:
   stage: deploy
