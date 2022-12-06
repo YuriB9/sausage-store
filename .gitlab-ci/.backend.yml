@@ -42,12 +42,21 @@ build-backend:
   image:
     name: gcr.io/kaniko-project/executor:v1.9.1-debug
     entrypoint: [""]
+  variables:
+    CACHE_TTL: 2190h0m0s # three months
+    IMAGE_NAME: sausage-backend
+    CONTEXT: "${CI_PROJECT_DIR}/backend"
   script:
-    - /kaniko/executor
+    - >
+      /kaniko/executor
       --build-arg VERSION=$VERSION
-      --context "${CI_PROJECT_DIR}/backend/"
-      --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
-      --destination "${CI_REGISTRY_IMAGE}/sausage-backend:$VERSION"
+      --context "${CONTEXT}/"
+      --dockerfile "${CONTEXT}/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}/$IMAGE_NAME:$VERSION"
+      --destination "${CI_REGISTRY_IMAGE}/$IMAGE_NAME:latest"
+      --cache=true
+      --cache-repo ${CI_REGISTRY_IMAGE}/$IMAGE_NAME
+      --cache-ttl $CACHE_TTL
 
 deploy-backend:
   stage: deploy
