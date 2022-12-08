@@ -57,10 +57,11 @@ deploy-frontend:
     - ssh-keyscan ${DEV_HOST} >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 
+    - scp ./docker-compose.yml ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/docker-compose.yml
+
     - >
       ssh ${DEV_USER}@${DEV_HOST}
-      "export "CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE}";
-      /bin/bash -s " < ./frontend/frontend_deploy.sh
+      "docker compose -f ~/docker-compose.yml up --pull=always --detach frontend"
 
 # TODO:
 # 1. implement generic notification templates
