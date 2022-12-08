@@ -74,8 +74,7 @@ deploy-backend:
 
     - scp ./docker-compose.yml ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/docker-compose.yml
 
-    - >
-      ssh ${DEV_USER}@${DEV_HOST}
+    - ssh ${DEV_USER}@${DEV_HOST}
       "export SPRING_DATASOURCE_URL=${PSQL_DATASOURCE};
        export SPRING_DATASOURCE_USERNAME=$(vault kv get -field=spring.datasource.username secret/sausage-store);
        export SPRING_DATASOURCE_PASSWORD=$(vault kv get -field=spring.datasource.password secret/sausage-store);
@@ -87,7 +86,7 @@ deploy-backend:
        export MONGO_RS=${MONGO_RS};
        export SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED};
        export REPORT_PATH=${REPORT_PATH};
-       export SPRING=${MONGO_URI};
+       export SPRING_DATA_MONGODB_URI=${MONGO_URI};
       printenv"
 
 slack-notification-backend:
