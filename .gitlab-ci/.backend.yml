@@ -75,13 +75,16 @@ deploy-backend:
     - scp ./docker-compose.yml ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/docker-compose.yml
 
     - >
-      ssh ${DEV_USER}@${DEV_HOST} /bin/bash << EOF
-      alias vault='docker exec -it vault vault'
-      export "SPRING_DATASOURCE_URL=${PSQL_DATASOURCE}"
-      echo 123
-      echo $SPRING_DATASOURCE_URL
-      docker compose --file ~/docker-compose.yml --profile backend-only --verbose up --pull=always --detach --force-recreate backend
-      EOF
+      ssh ${DEV_USER}@${DEV_HOST}
+      "export "SPRING_DATASOURCE_URL=${PSQL_DATASOURCE}";
+       export "SPRING_DATASOURCE_USERNAME=$(vault kv get -field=spring.datasource.username secret/sausage-store)";
+       export "SPRING_DATASOURCE_PASSWORD=$(vault kv get -field=spring.datasource.password secret/sausage-store)";
+       export "MONGO_USER=$(vault kv get -field=mongo.username secret/sausage-store)";
+       export "MONGO_PASSWORD=$(vault kv get -field=mongo.password secret/sausage-store)";
+       export "SPRING_DATA_MONGODB_URI=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}?replicaSet=${MONGO_RS}&tls=true";
+       export "SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED}";
+       export "REPORT_PATH=${REPORT_PATH}";
+      /bin/bash -c printenv"
 
 slack-notification-backend:
   stage: notify
