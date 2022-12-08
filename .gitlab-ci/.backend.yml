@@ -75,22 +75,21 @@ deploy-backend:
     - scp ./docker-compose.yml ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/docker-compose.yml
 
     - >
-      ssh ${DEV_USER}@${DEV_HOST} << EOF
-      export "VERSION=${VERSION}";
-      export "SPRING_DATASOURCE_URL=${PSQL_DATASOURCE}";
-      export "SPRING_DATASOURCE_USERNAME=$(vault kv get -field=spring.datasource.username secret/sausage-store)";
-      export "SPRING_DATASOURCE_PASSWORD=$(vault kv get -field=spring.datasource.password secret/sausage-store)";
-      export "MONGO_USER=$(vault kv get -field=mongo.username secret/sausage-store)";
-      export "MONGO_PASSWORD=$(vault kv get -field=mongo.password secret/sausage-store)";
-      export "MONGO_HOST=${MONGO_HOST}";
-      export "MONGO_PORT=${MONGO_PORT}";
-      export "MONGO_DATABASE=${MONGO_DATABASE}";
-      export "MONGO_RS=${MONGO_RS}";
-      export "SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED}";
-      export "REPORT_PATH=${REPORT_PATH}";
-      export "CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE}";
-      printenv
-      EOF
+      ssh ${DEV_USER}@${DEV_HOST}
+      "export "VERSION=${VERSION}";
+       export "SPRING_DATASOURCE_URL=${PSQL_DATASOURCE}";
+       export "SPRING_DATASOURCE_USERNAME=$(vault kv get -field=spring.datasource.username secret/sausage-store)";
+       export "SPRING_DATASOURCE_PASSWORD=$(vault kv get -field=spring.datasource.password secret/sausage-store)";
+       export "MONGO_USER=$(vault kv get -field=mongo.username secret/sausage-store)";
+       export "MONGO_PASSWORD=$(vault kv get -field=mongo.password secret/sausage-store)";
+       export "MONGO_HOST=${MONGO_HOST}";
+       export "MONGO_PORT=${MONGO_PORT}";
+       export "MONGO_DATABASE=${MONGO_DATABASE}";
+       export "MONGO_RS=${MONGO_RS}";
+       export "SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED}";
+       export "REPORT_PATH=${REPORT_PATH}";
+       export "CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE}";
+      printenv"
 
 slack-notification-backend:
   stage: notify
