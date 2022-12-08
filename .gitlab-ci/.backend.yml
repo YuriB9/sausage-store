@@ -84,7 +84,7 @@ deploy-backend:
        export SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED};
        export REPORT_PATH=${REPORT_PATH};
        export SPRING_DATA_MONGODB_URI="mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}?${MONGO_URI_SETTINGS}";
-      printenv"
+      docker compose --file ~/docker-compose.yml --profile backend-only up --pull=always --detach --force-recreate backend"
 
 slack-notification-backend:
   stage: notify
