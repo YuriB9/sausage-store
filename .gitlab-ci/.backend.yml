@@ -76,9 +76,11 @@ deploy-backend:
 
     - >
       ssh ${DEV_USER}@${DEV_HOST}
-      "alias vault='sudo docker exec -it vault vault';
+      "alias vault="docker exec -it vault vault";
        export "SPRING_DATASOURCE_URL=${PSQL_DATASOURCE}";
+       echo $SPRING_DATASOURCE_URL;
        export "SPRING_DATASOURCE_USERNAME=$(vault kv get -field=spring.datasource.username secret/sausage-store)";
+       echo $SPRING_DATASOURCE_USERNAME;
        export "SPRING_DATASOURCE_PASSWORD=$(vault kv get -field=spring.datasource.password secret/sausage-store)";
        export "MONGO_USER=$(vault kv get -field=mongo.username secret/sausage-store)";
        export "MONGO_PASSWORD=$(vault kv get -field=mongo.password secret/sausage-store)";
