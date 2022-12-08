@@ -4,6 +4,7 @@ services:
   backend:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-backend:latest
     container_name: sausage-backend
+    profiles: ["backend-only"]
     env_file:
       - .backend.env
     #environment:
@@ -17,6 +18,7 @@ services:
   backend-report:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-backend-report:latest
     container_name: sausage-backend-report
+    profiles: ["backend-report-only"]
     env_file:
       - .backend-report.env
     #environment:
@@ -28,6 +30,7 @@ services:
   frontend:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-frontend:latest
     container_name: sausage-frontend
+    profiles: ["frontend-only"]
     ports:
       - "80:80"
     networks:
