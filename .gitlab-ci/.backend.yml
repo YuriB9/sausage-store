@@ -87,7 +87,7 @@ deploy-backend:
        export MONGO_RS=${MONGO_RS};
        export SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED};
        export REPORT_PATH=${REPORT_PATH};
-       export SPRING_DATA_MONGODB_URI="mongodb://tt:ttt@ttt:ttt/ttt?replicaSet=tt&tls=true";
+       SPRING_DATA_MONGODB_URI="mongodb://tt:ttt@ttt:ttt/ttt?replicaSet=tt&tls=true";
       printenv"
 
 slack-notification-backend:
