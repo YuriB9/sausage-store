@@ -7,13 +7,14 @@ services:
     profiles: ["backend-only"]
     #env_file:
     #  - .backend.env
+    # add variables from the docker-compose environment to the container:
     environment:
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATA_MONGODB_URI: ${MONGODB_URI}
-      SPRING_FLYWAY_ENABLED: ${SPRING_FLYWAY_ENABLED}
-      REPORT_PATH: ${REPORT_PATH}
+      - SPRING_DATASOURCE_USERNAME
+      - SPRING_DATASOURCE_PASSWORD
+      - SPRING_DATASOURCE_URL
+      - SPRING_DATA_MONGODB_URI
+      - SPRING_FLYWAY_ENABLED
+      - REPORT_PATH
     networks:
       - sausage-store
   backend-report:
@@ -23,7 +24,7 @@ services:
     #env_file:
     #  - .backend-report.env
     environment:
-      DB: ${REPORTS_MONGODB_URI}
+      - DB
     networks:
       - sausage-store
     #depends_on:
