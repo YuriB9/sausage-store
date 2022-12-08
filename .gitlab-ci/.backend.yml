@@ -73,13 +73,11 @@ deploy-backend:
     - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=sausage-store jwt=$CI_JOB_JWT)"
 
     - scp ./docker-compose.yml ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/docker-compose.yml
+    - echo $SPRING_DATASOURCE_URL
 
     - >
       ssh ${DEV_USER}@${DEV_HOST}
-      "export "SPRING_DATASOURCE_URL=${PSQL_DATASOURCE}";
-       export "SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED}";
-       export "REPORT_PATH=${REPORT_PATH}";
-      docker compose --file ~/docker-compose.yml --profile backend-only --verbose up --pull=always --detach --force-recreate backend"
+      "docker compose --file ~/docker-compose.yml --profile backend-only --verbose up --pull=always --detach --force-recreate backend"
 
 slack-notification-backend:
   stage: notify
