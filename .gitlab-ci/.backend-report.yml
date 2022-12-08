@@ -46,11 +46,10 @@ deploy-backend-report:
 
     - >
       ssh ${DEV_USER}@${DEV_HOST}
-      "export "MONGO_USER=$(vault kv get -field=mongo.username secret/sausage-store)";
-       export "MONGO_PASSWORD=$(vault kv get -field=mongo.password secret/sausage-store)";
-       export "MONGODB_URI=$(mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}?replicaSet=${MONGO_RS}&tls=true&tlsCaFile=YandexInternalRootCA.crt)";
-       echo $MONGODB_URI;
-      docker compose --file ~/docker-compose.yml --profile backend-report-only up --pull=always --detach backend-report"
+      "export MONGO_USER=$(vault kv get -field=mongo.username secret/sausage-store);
+       export MONGO_PASSWORD=$(vault kv get -field=mongo.password secret/sausage-store);
+       export DB="mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}?${MONGO_URI_SETTINGS_REPORT}";
+      docker compose --file ~/docker-compose.yml --profile backend-report-only up --pull=always --detach --force-recreate backend-report"
 
 slack-notification-backend:
   stage: notify
