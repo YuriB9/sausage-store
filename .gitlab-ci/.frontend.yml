@@ -61,7 +61,7 @@ deploy-frontend:
 
     - >
       ssh ${DEV_USER}@${DEV_HOST}
-      "docker compose --file ~/docker-compose.yml --profile frontend-only up --pull=always --detach frontend"
+      "docker compose --file ~/docker-compose.yml --profile frontend-only up --pull=always --detach --force-recreate frontend"
 
 # TODO:
 # 1. implement generic notification templates
