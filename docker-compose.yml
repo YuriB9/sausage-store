@@ -5,24 +5,25 @@ services:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-backend:latest
     container_name: sausage-backend
     profiles: ["backend-only"]
-    env_file:
-      - .backend.env
-    #environment:
-    #  SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-    #  SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-    #  SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-    #  SPRING_FLYWAY_ENABLED: "false"
-    #  REPORT_PATH: ${REPORT_PATH}
+    #env_file:
+    #  - .backend.env
+    environment:
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATA_MONGODB_URI: ${MONGODB_URI}
+      SPRING_FLYWAY_ENABLED: ${SPRING_FLYWAY_ENABLED}
+      REPORT_PATH: ${REPORT_PATH}
     networks:
       - sausage-store
   backend-report:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-backend-report:latest
     container_name: sausage-backend-report
     profiles: ["backend-report-only"]
-    env_file:
-      - .backend-report.env
-    #environment:
-    #  DB: ${REPORTS_MONGODB_URI}
+    #env_file:
+    #  - .backend-report.env
+    environment:
+      DB: ${REPORTS_MONGODB_URI}
     networks:
       - sausage-store
     depends_on:
