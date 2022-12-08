@@ -71,22 +71,20 @@ deploy-backend:
     - chmod 644 ~/.ssh/known_hosts
 
     - export VAULT_TOKEN="$(vault write -field=token auth/jwt/login role=sausage-store jwt=$CI_JOB_JWT)"
+
+    - scp ./docker-compose.yml ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/docker-compose.yml
+
     - >
       ssh ${DEV_USER}@${DEV_HOST}
-      "export "VERSION=${VERSION}";
-       export "SPRING_DATASOURCE_URL=${PSQL_DATASOURCE}";
+      "export "SPRING_DATASOURCE_URL=${PSQL_DATASOURCE}";
        export "SPRING_DATASOURCE_USERNAME=$(vault kv get -field=spring.datasource.username secret/sausage-store)";
        export "SPRING_DATASOURCE_PASSWORD=$(vault kv get -field=spring.datasource.password secret/sausage-store)";
        export "MONGO_USER=$(vault kv get -field=mongo.username secret/sausage-store)";
        export "MONGO_PASSWORD=$(vault kv get -field=mongo.password secret/sausage-store)";
-       export "MONGO_HOST=${MONGO_HOST}";
-       export "MONGO_PORT=${MONGO_PORT}";
-       export "MONGO_DATABASE=${MONGO_DATABASE}";
-       export "MONGO_RS=${MONGO_RS}";
+       export "REPORTS_MONGODB_URI=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}?replicaSet=${MONGO_RS}&tls=true";
        export "SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED}";
        export "REPORT_PATH=${REPORT_PATH}";
-       export "CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE}";
-      /bin/bash -s " < ./backend/backend_deploy.sh
+      docker compose --file ~/docker-compose.yml --profile backend-only up --pull=always --detach backend"
 
 slack-notification-backend:
   stage: notify
