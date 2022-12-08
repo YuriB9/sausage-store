@@ -26,8 +26,8 @@ services:
       DB: ${REPORTS_MONGODB_URI}
     networks:
       - sausage-store
-    depends_on:
-      - backend
+    #depends_on:
+    #  - backend
   frontend:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-frontend:latest
     container_name: sausage-frontend
@@ -36,8 +36,8 @@ services:
       - "80:80"
     networks:
       - sausage-store
-    depends_on:
-      - backend
+    #depends_on:
+    #  - backend
 
 networks:
   sausage-store:
