@@ -76,8 +76,9 @@ deploy-backend:
 
     - >
       ssh ${DEV_USER}@${DEV_HOST}
-      "alias vault="docker exec -it vault vault";
+      "alias vault='docker exec -it vault vault';
        export "SPRING_DATASOURCE_URL=${PSQL_DATASOURCE}";
+       echo 123
        echo $SPRING_DATASOURCE_URL;
       docker compose --file ~/docker-compose.yml --profile backend-only --verbose up --pull=always --detach --force-recreate backend"
 
