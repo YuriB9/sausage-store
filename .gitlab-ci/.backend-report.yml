@@ -2,50 +2,20 @@ include:
   - project: 'templates/ci'
     file: 'DockerInDockerTemplate.yml'
 
-#
-# Commented Security related lines to speed up the deploy
-#
-#  - template: Security/Container-Scanning.gitlab-ci.yml
-#  - template: Security/SAST.gitlab-ci.yml
-#  - local: '/.gitlab-ci/.SAST.backend.yml'
-
-#variables:
-#  SAST_EXCLUDED_ANALYZERS: "eslint,nodejs-scan,semgrep"
-
-#container_scanning:
-#  variables:
-#    CS_IMAGE: $CI_REGISTRY_IMAGE/sausage-backend:$VERSION
-#    GIT_STRATEGY: fetch
-#    CS_DOCKERFILE_PATH: backend/Dockerfile
-
 stages:
    - build
-   - test
-   - release
    - deploy
    - notify
 
-# To enable m2 cache for spotbug-sast
-
-#build-m2:
-#  stage: build
-#  script:
-#    - cd backend
-#    - mvn package -Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository -Dversion.application=${VERSION}
-#  artifacts:
-#    paths:
-#      - ${CI_PROJECT_DIR}/.m2/
-#      - backend/target/sausage-store-${VERSION}.jar
-
-build-backend:
+build-backend-report:
   stage: build
   image:
     name: gcr.io/kaniko-project/executor:v1.9.1-debug
     entrypoint: [""]
   variables:
     CACHE_TTL: 2190h0m0s # three months
-    IMAGE_NAME: sausage-backend
-    CONTEXT: "${CI_PROJECT_DIR}/backend"
+    IMAGE_NAME: sausage-backend-report
+    CONTEXT: "${CI_PROJECT_DIR}/backend-report"
   script:
     - >
       /kaniko/executor
@@ -58,7 +28,7 @@ build-backend:
       --cache-repo ${CI_REGISTRY_IMAGE}/$IMAGE_NAME
       --cache-ttl $CACHE_TTL
 
-deploy-backend:
+deploy-backend-report:
   stage: deploy
   image: vault:1.12.1
   script:
@@ -76,15 +46,10 @@ deploy-backend:
 
     - >
       ssh ${DEV_USER}@${DEV_HOST}
-      "export SPRING_DATASOURCE_URL=${PSQL_DATASOURCE};
-       export SPRING_DATASOURCE_USERNAME=$(vault kv get -field=spring.datasource.username secret/sausage-store);
-       export SPRING_DATASOURCE_PASSWORD=$(vault kv get -field=spring.datasource.password secret/sausage-store);
-       export MONGO_USER=$(vault kv get -field=mongo.username secret/sausage-store);
+      "export MONGO_USER=$(vault kv get -field=mongo.username secret/sausage-store);
        export MONGO_PASSWORD=$(vault kv get -field=mongo.password secret/sausage-store);
-       export SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED};
-       export REPORT_PATH=${REPORT_PATH};
-       export SPRING_DATA_MONGODB_URI="mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}?${MONGO_URI_SETTINGS}";
-      docker compose --file ~/docker-compose.yml --profile backend-only up --pull=always --detach --force-recreate backend"
+       export DB="mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}?${MONGO_URI_SETTINGS_REPORT}";
+      docker compose --file ~/docker-compose.yml --profile backend-report-only up --pull=always --detach --force-recreate backend-report"
 
 slack-notification-backend:
   stage: notify
