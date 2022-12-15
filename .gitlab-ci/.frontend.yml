@@ -58,6 +58,7 @@ deploy-frontend:
     - chmod 644 ~/.ssh/known_hosts
 
     - scp ./docker-compose.yml ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/docker-compose.yml
+    - scp ./frontend/nginx.tmpl ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/nginx.tmpl
 
     - >
       ssh ${DEV_USER}@${DEV_HOST}
