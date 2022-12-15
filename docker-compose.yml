@@ -4,7 +4,6 @@ services:
   backend:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-backend:latest
     pull_policy: always
-    #container_name: sausage-backend
     profiles: ["backend-only"]
     expose:
       - "8080"
@@ -17,7 +16,7 @@ services:
       - SPRING_FLYWAY_ENABLED
       - REPORT_PATH
     networks:
-      - sausage-store
+      - sausage-network
   backend-report:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-backend-report:latest
     pull_policy: always
@@ -26,7 +25,7 @@ services:
     environment:
       - DB
     networks:
-      - sausage-store
+      - sausage-network
   frontend:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-frontend:latest
     pull_policy: always
@@ -40,7 +39,11 @@ services:
       #- ./certs:/etc/nginx/certs:ro
       #- ./vhost.d:/etc/nginx/vhost.d
     networks:
-      - sausage-store
+      - sausage-network
 
+#networks:
+#  sausage-store:
 networks:
-  sausage-store:
+  default:
+    external:
+      name: sausage-network
