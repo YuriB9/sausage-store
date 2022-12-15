@@ -45,5 +45,4 @@ services:
 #  sausage-store:
 networks:
   default:
-    external:
-      name: sausage-network
+    name: sausage-network
