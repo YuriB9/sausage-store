@@ -4,7 +4,7 @@ services:
   backend:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-backend:latest
     pull_policy: always
-    container_name: sausage-backend
+    #container_name: sausage-backend
     profiles: ["backend-only"]
     expose:
       - "8080"
