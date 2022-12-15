@@ -1,0 +1,19 @@
+FROM gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/node:8.17-alpine AS base
+RUN mkdir -p /home/node/app
+RUN chown -R node:node /home/node && chmod -R 770 /home/node
+WORKDIR /home/node/app
+
+FROM base AS builder-client
+WORKDIR /home/node/app
+USER node
+COPY --chown=node:node *.json ./
+RUN npm ci && npm cache clean --force
+COPY --chown=node:node src/ ./src/
+RUN npm run build
+
+FROM gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/nginx-proxy:latest
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder-client /home/node/app/dist/frontend /usr/share/nginx/html
+
+EXPOSE 80
+ENTRYPOINT ["nginx"]
