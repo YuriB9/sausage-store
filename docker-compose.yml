@@ -44,5 +44,5 @@ services:
 #networks:
 #  sausage-store:
 networks:
-  default:
+  sausage-network:
     name: sausage-network
