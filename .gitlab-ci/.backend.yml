@@ -76,7 +76,8 @@ deploy-backend:
 
     - >
       ssh ${DEV_USER}@${DEV_HOST}
-      "export SPRING_DATASOURCE_URL=${PSQL_DATASOURCE};
+      "export VIRTUAL_HOST=sausage-backend;
+       export SPRING_DATASOURCE_URL=${PSQL_DATASOURCE};
        export SPRING_DATASOURCE_USERNAME=$(vault kv get -field=spring.datasource.username secret/sausage-store);
        export SPRING_DATASOURCE_PASSWORD=$(vault kv get -field=spring.datasource.password secret/sausage-store);
        export MONGO_USER=$(vault kv get -field=mongo.username secret/sausage-store);

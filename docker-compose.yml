@@ -9,7 +9,7 @@ services:
     expose:
       - "8080"
     environment:
-      - VIRTUAL_HOST=sausage-backend
+      - VIRTUAL_HOST
       - SPRING_DATASOURCE_USERNAME
       - SPRING_DATASOURCE_PASSWORD
       - SPRING_DATASOURCE_URL
