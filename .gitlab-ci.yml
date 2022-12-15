@@ -5,15 +5,15 @@ variables:
    VERSION: 1.0.${CI_PIPELINE_ID}
    JAVA_OPTS: -XX:MaxRAMPercentage=90
 
-#frontend:
-#   stage: module-pipelines
-#   trigger:
-#      include:
-#         - local: "/.gitlab-ci/.frontend.yml"
-#      strategy: depend
-#   only:
-#      changes:
-#         - frontend/**/*
+frontend:
+   stage: module-pipelines
+   trigger:
+      include:
+         - local: "/.gitlab-ci/.frontend.yml"
+      strategy: depend
+   only:
+      changes:
+         - frontend/**/*
 
 backend:
    stage: module-pipelines
@@ -25,12 +25,12 @@ backend:
       changes:
          - backend/**/*
 
-#backend-report:
-#   stage: module-pipelines
-#   trigger:
-#      include:
-#         - local: "/.gitlab-ci/.backend-report.yml"
-#      strategy: depend
-#   only:
-#      changes:
-#         - backend-report/**/*
+backend-report:
+   stage: module-pipelines
+   trigger:
+      include:
+         - local: "/.gitlab-ci/.backend-report.yml"
+      strategy: depend
+   only:
+      changes:
+         - backend-report/**/*
