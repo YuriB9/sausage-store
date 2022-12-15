@@ -6,7 +6,10 @@ services:
     pull_policy: always
     container_name: sausage-backend
     profiles: ["backend-only"]
+    expose:
+      - "8080"
     environment:
+      - VIRTUAL_HOST=sausage-backend
       - SPRING_DATASOURCE_USERNAME
       - SPRING_DATASOURCE_PASSWORD
       - SPRING_DATASOURCE_URL
@@ -31,6 +34,11 @@ services:
     profiles: ["frontend-only"]
     ports:
       - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx.tmpl:/app/nginx.tmpl
+      #- ./certs:/etc/nginx/certs:ro
+      #- ./vhost.d:/etc/nginx/vhost.d
     networks:
       - sausage-store
 
