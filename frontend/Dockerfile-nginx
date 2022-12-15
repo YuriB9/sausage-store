@@ -16,4 +16,4 @@ FROM gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/nginx-proxy:lat
 COPY --from=builder-client /home/node/app/dist/frontend /usr/share/nginx/html
 
 EXPOSE 80
-ENTRYPOINT ["nginx"]
+#ENTRYPOINT ["nginx"]
