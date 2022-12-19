@@ -38,7 +38,8 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./frontend/nginx.tmpl:/app/nginx.tmpl
+      #- ./frontend/nginx.tmpl:/app/nginx.tmpl
+      - ./nginx.tmpl:/app/nginx.tmpl
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
       - web-root:/usr/share/nginx/html
