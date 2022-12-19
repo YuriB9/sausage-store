@@ -17,6 +17,7 @@ services:
       - REPORT_PATH
     networks:
       - sausage-network
+
   backend-report:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-backend-report:latest
     pull_policy: always
@@ -26,6 +27,7 @@ services:
       - DB
     networks:
       - sausage-network
+
   frontend:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-frontend:latest
     pull_policy: always
@@ -33,16 +35,38 @@ services:
     profiles: ["frontend-only"]
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./nginx.tmpl:/app/nginx.tmpl
-      #- ./certs:/etc/nginx/certs:ro
-      #- ./vhost.d:/etc/nginx/vhost.d
+      - ./frontend/nginx.tmpl:/app/nginx.tmpl
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/usr/share/nginx/html
     networks:
       - sausage-network
 
-#networks:
-#  sausage-store:
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    profiles: ["certbot-only"]
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/usr/share/nginx/html
+    command: >
+      certonly
+      --webroot --webroot-path=/usr/share/nginx/html
+      --email batckov.yury@yandex.ru --agree-tos --no-eff-email --force-renewal
+      -d batkovy-glava82-sausagestore.tk -d www.batkovy-glava82-sausagestore.tk
+    networks:
+      - sausage-network
+
+volumes:
+  certbot-etc:
+  certbot-var:
+  web-root:
+
 networks:
   sausage-network:
     name: sausage-network
