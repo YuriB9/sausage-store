@@ -24,26 +24,26 @@ stages:
    - deploy
    - notify
 
-#build-frontend:
-#  stage: build
-#  image:
-#    name: gcr.io/kaniko-project/executor:v1.9.1-debug
-#    entrypoint: [""]
-#  variables:
-#    CACHE_TTL: 2190h0m0s # three months
-#    IMAGE_NAME: sausage-frontend
-#    CONTEXT: "${CI_PROJECT_DIR}/frontend"
-#  script:
-#    - >
-#      /kaniko/executor
-#      --build-arg VERSION=$VERSION
-#      --context "${CONTEXT}/"
-#      --dockerfile "${CONTEXT}/Dockerfile-nginx"
-#      --destination "${CI_REGISTRY_IMAGE}/$IMAGE_NAME:$VERSION"
-#      --destination "${CI_REGISTRY_IMAGE}/$IMAGE_NAME:latest"
-#      --cache=true
-#      --cache-repo ${CI_REGISTRY_IMAGE}/$IMAGE_NAME
-#      --cache-ttl $CACHE_TTL
+build-frontend:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.1-debug
+    entrypoint: [""]
+  variables:
+    CACHE_TTL: 2190h0m0s # three months
+    IMAGE_NAME: sausage-frontend
+    CONTEXT: "${CI_PROJECT_DIR}/frontend"
+  script:
+    - >
+      /kaniko/executor
+      --build-arg VERSION=$VERSION
+      --context "${CONTEXT}/"
+      --dockerfile "${CONTEXT}/Dockerfile-nginx"
+      --destination "${CI_REGISTRY_IMAGE}/$IMAGE_NAME:$VERSION"
+      --destination "${CI_REGISTRY_IMAGE}/$IMAGE_NAME:latest"
+      --cache=true
+      --cache-repo ${CI_REGISTRY_IMAGE}/$IMAGE_NAME
+      --cache-ttl $CACHE_TTL
 
 deploy-frontend:
   stage: deploy
