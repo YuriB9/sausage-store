@@ -15,7 +15,7 @@ frontend:
       changes:
          - frontend/**/*
 
-.backend:
+backend:
    stage: module-pipelines
    trigger:
       include:
