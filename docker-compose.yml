@@ -47,7 +47,7 @@ services:
       - sausage-network
 
   certbot:
-    image: certbot/certbot
+    image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/certbot/certbot
     container_name: certbot
     profiles: ["certbot-only"]
     volumes:
@@ -65,8 +65,14 @@ services:
 
 volumes:
   certbot-etc:
+    external: true
+    name: sausage-store_certbot-etc
   certbot-var:
+    external: true
+    name: sausage-store_certbot-var
   web-root:
+    external: true
+    name: sausage-store_web-root
 
 networks:
   sausage-network:
