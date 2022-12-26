@@ -38,7 +38,7 @@ build-frontend:
       /kaniko/executor
       --build-arg VERSION=$VERSION
       --context "${CONTEXT}/"
-      --dockerfile "${CONTEXT}/Dockerfile"
+      --dockerfile "${CONTEXT}/Dockerfile-nginx"
       --destination "${CI_REGISTRY_IMAGE}/$IMAGE_NAME:$VERSION"
       --destination "${CI_REGISTRY_IMAGE}/$IMAGE_NAME:latest"
       --cache=true
@@ -58,6 +58,7 @@ deploy-frontend:
     - chmod 644 ~/.ssh/known_hosts
 
     - scp ./docker-compose.yml ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/docker-compose.yml
+    - scp ./frontend/nginx.tmpl ${DEV_USER}@${DEV_HOST}:/home/${DEV_USER}/nginx.tmpl
 
     - >
       ssh ${DEV_USER}@${DEV_HOST}

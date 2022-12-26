@@ -1,12 +1,16 @@
-version: "3.3"
+version: "3.8"
 
 services:
   backend:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-backend:latest
     pull_policy: always
-    container_name: sausage-backend
     profiles: ["backend-only"]
+    expose:
+      - "8080"
+    deploy:
+      replicas: 2
     environment:
+      - VIRTUAL_HOST=sausage-backend
       - SPRING_DATASOURCE_USERNAME
       - SPRING_DATASOURCE_PASSWORD
       - SPRING_DATASOURCE_URL
@@ -14,7 +18,8 @@ services:
       - SPRING_FLYWAY_ENABLED
       - REPORT_PATH
     networks:
-      - sausage-store
+      - sausage-network
+
   backend-report:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-backend-report:latest
     pull_policy: always
@@ -23,7 +28,8 @@ services:
     environment:
       - DB
     networks:
-      - sausage-store
+      - sausage-network
+
   frontend:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-frontend:latest
     pull_policy: always
@@ -31,8 +37,45 @@ services:
     profiles: ["frontend-only"]
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      #- ./frontend/nginx.tmpl:/app/nginx.tmpl
+      - ./nginx.tmpl:/app/nginx.tmpl
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/usr/share/nginx/html
     networks:
-      - sausage-store
+      - sausage-network
+
+  certbot:
+    image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/certbot/certbot
+    container_name: certbot
+    profiles: ["certbot-only"]
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/usr/share/nginx/html
+    command: >
+      certonly
+      --webroot --webroot-path=/usr/share/nginx/html
+      --email batckov.yury@yandex.ru --agree-tos --no-eff-email --force-renewal
+      -d batkovy-glava82-sausagestore.tk -d www.batkovy-glava82-sausagestore.tk
+    networks:
+      - sausage-network
+
+volumes:
+  certbot-etc:
+    external: true
+    name: sausage-store_certbot-etc
+  certbot-var:
+    external: true
+    name: sausage-store_certbot-var
+  web-root:
+    external: true
+    name: sausage-store_web-root
 
 networks:
-  sausage-store:
+  sausage-network:
+    name: sausage-network

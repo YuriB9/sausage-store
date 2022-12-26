@@ -1,0 +1,74 @@
+{{ range $host, $containers := groupBy $ "Env.VIRTUAL_HOST" }}
+upstream {{ $host }} {
+
+{{ range $index, $value := $containers }}
+    {{ with $address := index $value.Addresses 0 }}
+    server {{ $value.Hostname }}:{{ $address.Port }};
+    {{ end }}
+{{ end }}
+
+}
+
+server {
+  listen 80;
+  server_name batkovy-glava82-sausagestore.tk;
+
+  location ~ /.well-known/acme-challenge {
+    allow all;
+    root /usr/share/nginx/html;
+  }
+
+  location / {
+    rewrite ^ https://batkovy-glava82-sausagestore.tk$request_uri? permanent;
+  }
+}
+
+server {
+
+    listen 443 ssl http2;
+
+    server_name batkovy-glava82-sausagestore.tk;
+
+    server_tokens off;
+
+    ssl_certificate /etc/letsencrypt/live/batkovy-glava82-sausagestore.tk/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/batkovy-glava82-sausagestore.tk/privkey.pem;
+
+    ssl_buffer_size 8k;
+
+    ssl_protocols TLSv1.2;
+    ssl_prefer_server_ciphers on;
+
+    ssl_ciphers ECDH+AESGCM:ECDH+AES256:ECDH+AES128:DH+3DES:!ADH:!AECDH:!MD5;
+
+    ssl_ecdh_curve secp384r1;
+    ssl_session_tickets off;
+
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    resolver 8.8.4.4 8.8.8.8 valid=300s;
+
+    root   /usr/share/nginx/html;
+
+    location ~ /index.html|.*\.json$ {
+        expires -1;
+        add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+    }
+
+    location ~ .*\.css$|.*\.js$ {
+        add_header Cache-Control 'max-age=31449600'; # one year
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+        add_header Cache-Control 'max-age=86400'; # one day
+    }
+
+    location /api {
+        proxy_pass http://{{ $host }};
+    }
+
+}
+
+{{ end }}
