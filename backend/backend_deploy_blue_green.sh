@@ -14,9 +14,9 @@ echo "Start '$NEW' backend."
 
 docker compose --file ~/docker-compose.yml --profile backend-only up --pull=always --detach --force-recreate backend-$NEW
 
-for i in {1..20}
+for i in {1..60}
 do
-    sleep 1
+    sleep 5s
 
     ALL_CONTAINERS=$(docker container ps --filter="label=tk.batkovy.deployment=$NEW" --quiet)
     HEALTHY_CONTAINERS=$(docker container ps --filter="label=tk.batkovy.deployment=$NEW" --filter="health=healthy" --quiet)
@@ -26,7 +26,7 @@ do
         echo "'$NEW' backend is not ready yet. Waiting '$i'..."
     else
         echo "'$NEW' backend seems OK."
-        sleep 2  # Ensure all requests were processed
+        sleep 5s  # Ensure all requests were processed
 
         echo "Stopping "$OLD" backend."
         #docker compose --file ~/docker-compose.yml --profile backend-only up --pull=always --detach --force-recreate backend-$OLD
@@ -38,4 +38,4 @@ do
 
 done
 
-echo "New '$NEW' service did not raise, killing it. Failed to deploy T_T"
+echo "New '$NEW' service did not raise. Failed to deploy."
