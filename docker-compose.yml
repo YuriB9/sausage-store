@@ -7,13 +7,10 @@ services:
     profiles: ["backend-only"]
     expose:
       - "8080"
-      - "9090"
-    ports:
-      - "9090"
     deploy:
       replicas: 2
     healthcheck:
-      test: curl --fail --silent http://localhost:9090/actuator/health
+      test: curl --fail --silent http://localhost:8080/actuator/health
       interval: 30s
       timeout: 10s
       start_period: 20s
