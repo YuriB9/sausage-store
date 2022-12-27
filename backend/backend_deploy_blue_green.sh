@@ -27,8 +27,12 @@ do
     else
         echo "'$NEW' backend seems OK."
 
-        echo "Stop '$OLD' backend."
-        docker compose --file ~/docker-compose.yml --profile backend-only stop backend-$OLD
+        sleep 5s # just wait for nginx switchover
+
+        echo "Stop and Remove '$OLD' backend."
+        docker compose --file ~/docker-compose.yml --profile backend-only rm --stop --force backend-$OLD
+
+        sleep 5s # just to process all container's stop
 
         break
     fi
@@ -37,7 +41,8 @@ done
 
 if [[ $ALL_CONTAINERS != $HEALTHY_CONTAINERS ]]
 then
-    echo "New '$NEW' backend failed to deploy."
+    echo "New '$NEW' backend failed to deploy. Cleanup."
+    docker compose --file ~/docker-compose.yml --profile backend-only rm --stop --force backend-$NEW
 else
     echo "Deployment successful!"
 fi
