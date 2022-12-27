@@ -69,7 +69,8 @@ deploy-frontend:
 # 2. implement failed\success notifications (depends on test results)
 # 3. implement cool slack message template
 
-slack-notification-frontend:
+# not actual anymore
+.slack-notification-frontend:
   stage: notify
   only:
     variables:
