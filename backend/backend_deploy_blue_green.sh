@@ -19,26 +19,22 @@ do
     sleep 1
 
     ALL_CONTAINERS=$(docker container ps --filter="label=tk.batkovy.deployment=$NEW" --quiet)
+    HEALTHY_CONTAINERS=$(docker container ps --filter="label=tk.batkovy.deployment=$NEW" --filter="health=healthy" --quiet)
 
-    for CONTAINER in $ALL_CONTAINERS
-    do
-        HEALTH=$(docker inspect --format "{{json .State.Health.Status }}" $CONTAINER)
+    if [[ $ALL_CONTAINERS != $HEALTHY_CONTAINERS ]]
+    then
+        echo "'$NEW' backend is not ready yet. Waiting '$i'..."
+    else
+        echo "'$NEW' backend seems OK."
+        sleep 2  # Ensure all requests were processed
 
-        if [[ ${HEALTH} != "healthy" ]]
-        then
-            echo "'$NEW' backend is not ready yet. Waiting '$i'..."
-            break 1
-        fi
-    done
+        echo "Stopping "$OLD" backend."
+        #docker compose --file ~/docker-compose.yml --profile backend-only up --pull=always --detach --force-recreate backend-$OLD
 
-    echo "'$NEW' backend seems OK."
-    sleep 2  # Ensure all requests were processed
+        echo "Deployment successful!"
 
-    echo "Stopping "$OLD" backend."
-    #docker compose --file ~/docker-compose.yml --profile backend-only up --pull=always --detach --force-recreate backend-$OLD
-
-    echo "Deployment successful!"
-    return 0
+        break
+    fi
 
 done
 
