@@ -1,7 +1,7 @@
 #!/bin/bash
 set +e
 
-if [ $(docker container ps -f name=blue -q) ]
+if [ $(docker container ps --filter="label=tk.batkovy.deployment=Blue" --quiet) ]
 then
     NEW="green"
     OLD="blue"
@@ -10,7 +10,7 @@ else
     OLD="green"
 fi
 
-echo "Starting "$NEW" backend"
+echo "Starting "$NEW" backend."
 
 docker compose --file ~/docker-compose.yml --profile backend-only up --pull=always --detach --force-recreate backend-$NEW
 
@@ -23,7 +23,7 @@ do
 
     if [[ ${HEALTH} == "healthy"]]
     then
-        echo "New '$NEW' service seems OK. "
+        echo "New '$NEW' service seems OK."
         sleep 2  # Ensure all requests were processed
 
         echo "Stopping "$OLD" backend"
