@@ -27,7 +27,7 @@ do
         if [[ ${HEALTH} != "healthy" ]]
         then
             echo "'$NEW' backend is not ready yet. Waiting '$i'..."
-            break 2
+            break 1
         fi
     done
 
@@ -43,4 +43,3 @@ do
 done
 
 echo "New '$NEW' service did not raise, killing it. Failed to deploy T_T"
-return 5
