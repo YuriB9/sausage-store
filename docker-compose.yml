@@ -17,7 +17,7 @@ services:
       retries: 6
     labels:
       - "tk.batkovy.description=Sausage store backend"
-      - "tk.batkovy.deployment=Blue"
+      - "tk.batkovy.deployment=blue"
     environment:
       - VIRTUAL_HOST=sausage-backend
       - SPRING_DATASOURCE_USERNAME
@@ -44,7 +44,7 @@ services:
       retries: 6
     labels:
       - "tk.batkovy.description=Sausage store backend"
-      - "tk.batkovy.deployment=Green"
+      - "tk.batkovy.deployment=green"
     environment:
       - VIRTUAL_HOST=sausage-backend
       - SPRING_DATASOURCE_USERNAME
