@@ -26,16 +26,18 @@ do
         echo "'$NEW' backend is not ready yet. Waiting '$i'..."
     else
         echo "'$NEW' backend seems OK."
-        sleep 5s  # Ensure all requests were processed
 
-        echo "Stopping "$OLD" backend."
-        #docker compose --file ~/docker-compose.yml --profile backend-only up --pull=always --detach --force-recreate backend-$OLD
-
-        echo "Deployment successful!"
+        echo "Stop '$OLD' backend."
+        docker compose --file ~/docker-compose.yml --profile backend-only stop backend-$OLD
 
         break
     fi
 
 done
 
-echo "New '$NEW' service did not raise. Failed to deploy."
+if [[ $ALL_CONTAINERS != $HEALTHY_CONTAINERS ]]
+then
+    echo "New '$NEW' backend failed to deploy."
+else
+    echo "Deployment successful!"
+fi
