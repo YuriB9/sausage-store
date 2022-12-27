@@ -10,7 +10,7 @@ else
     OLD="green"
 fi
 
-echo "Starting '$NEW' backend."
+echo "Start '$NEW' backend."
 
 docker compose --file ~/docker-compose.yml --profile backend-only up --pull=always --detach --force-recreate backend-$NEW
 
@@ -18,18 +18,20 @@ for i in {1..20}
 do
     sleep 1
 
-    OVERALL_HEALTH=$(docker container ps --filter="label=tk.batkovy.deployment=$NEW" --quiet)
+    ALL_CONTAINERS=$(docker container ps --filter="label=tk.batkovy.deployment=$NEW" --quiet)
 
-    for HEALTH in $OVERALL_HEALTH
+    for CONTAINER in $ALL_CONTAINERS
     do
-        if [[ ${HEALTH} != "healthy"]]
+        HEALTH=$(docker inspect --format "{{json .State.Health.Status }}" $CONTAINER)
+
+        if [[ ${HEALTH} != "healthy" ]]
         then
-            echo "New '$NEW' service is not ready yet. Waiting ($i)..."
-            break
+            echo "'$NEW' backend is not ready yet. Waiting '$i'..."
+            break 2
         fi
     done
 
-    echo "New '$NEW' backend seems OK."
+    echo "'$NEW' backend seems OK."
     sleep 2  # Ensure all requests were processed
 
     echo "Stopping "$OLD" backend."
