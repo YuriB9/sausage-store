@@ -37,7 +37,7 @@ stages:
 #      - ${CI_PROJECT_DIR}/.m2/
 #      - backend/target/sausage-store-${VERSION}.jar
 
-build-backend:
+.build-backend:
   stage: build
   image:
     name: gcr.io/kaniko-project/executor:v1.9.1-debug
