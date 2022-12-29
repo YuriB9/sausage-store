@@ -17,6 +17,8 @@ WORKDIR /app
 
 COPY --from=builder /usr/src/app/YandexInternalRootCA.crt .
 
+RUN apk --no-cache add curl
+
 RUN keytool -importcert -file YandexInternalRootCA.crt \
     -alias yandex -cacerts -storepass changeit -noprompt \
     && rm -rf YandexInternalRootCA.crt \

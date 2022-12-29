@@ -81,7 +81,7 @@ deploy-backend:
        export SPRING_DATASOURCE_PASSWORD=$(vault kv get -field=spring.datasource.password secret/sausage-store);
        export SPRING_FLYWAY_ENABLED=${SPRING_FLYWAY_ENABLED};
        export REPORT_PATH=${REPORT_PATH};
-      docker compose --file ~/docker-compose.yml --profile backend-only up --pull=always --detach --force-recreate backend"
+      /bin/bash -s " < ./backend/backend_deploy_blue_green.sh
 
 # not actual anymore
 .slack-notification-backend:

@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  backend:
+  backend-blue:
     image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-backend:latest
     pull_policy: always
     profiles: ["backend-only"]
@@ -9,12 +9,47 @@ services:
       - "8080"
     deploy:
       replicas: 2
+    healthcheck:
+      test: curl --fail --silent http://localhost:8080/actuator/health
+      interval: 30s
+      timeout: 10s
+      start_period: 20s
+      retries: 6
+    labels:
+      - "tk.batkovy.description=Sausage store backend"
+      - "tk.batkovy.deployment=blue"
     environment:
       - VIRTUAL_HOST=sausage-backend
       - SPRING_DATASOURCE_USERNAME
       - SPRING_DATASOURCE_PASSWORD
       - SPRING_DATASOURCE_URL
-      - SPRING_DATA_MONGODB_URI
+      - SPRING_FLYWAY_ENABLED
+      - REPORT_PATH
+    networks:
+      - sausage-network
+
+  backend-green:
+    image: gitlab.praktikum-services.ru:5050/std-009-060/sausage-store/sausage-backend:latest
+    pull_policy: always
+    profiles: ["backend-only"]
+    expose:
+      - "8080"
+    deploy:
+      replicas: 2
+    healthcheck:
+      test: curl --fail --silent http://localhost:8080/actuator/health
+      interval: 30s
+      timeout: 10s
+      start_period: 20s
+      retries: 6
+    labels:
+      - "tk.batkovy.description=Sausage store backend"
+      - "tk.batkovy.deployment=green"
+    environment:
+      - VIRTUAL_HOST=sausage-backend
+      - SPRING_DATASOURCE_USERNAME
+      - SPRING_DATASOURCE_PASSWORD
+      - SPRING_DATASOURCE_URL
       - SPRING_FLYWAY_ENABLED
       - REPORT_PATH
     networks:
