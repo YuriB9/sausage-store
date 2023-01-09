@@ -38,7 +38,7 @@ build-frontend:
       /kaniko/executor
       --build-arg VERSION=$VERSION
       --context "${CONTEXT}/"
-      --dockerfile "${CONTEXT}/Dockerfile-nginx"
+      --dockerfile "${CONTEXT}/Dockerfile-nginx-proxy"
       --destination "${CI_REGISTRY_IMAGE}/$IMAGE_NAME:$VERSION"
       --destination "${CI_REGISTRY_IMAGE}/$IMAGE_NAME:latest"
       --cache=true
